@@ -235,7 +235,8 @@ body.dark .mmap{background:rgba(23,33,48,.9);border-color:var(--line)}
 .lf-sum{font-weight:700;color:var(--text-2);white-space:nowrap;flex:0 0 auto}
 .lf-chips{display:flex;gap:4px;min-width:0;overflow:hidden;flex:1}
 .lf-chips span{font-weight:700;background:#eef2f7;color:var(--text);padding:2px 6px;border-radius:4px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.lf-chips .more{font-weight:700;color:var(--accent);background:#e8eeff;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.lf-chips span{flex:0 0 auto}
+.lens-ft .more{flex:0 0 auto;font-weight:700;color:var(--accent);background:#e8eeff;padding:2px 6px;border-radius:4px;white-space:nowrap}
 .lf-list{height:24px;padding:0 8px;border-radius:6px;font-weight:700;color:var(--text-2);display:flex;align-items:center;gap:4px;white-space:nowrap}
 .lf-list:hover,.lf-list.on{background:#e8eeff;color:var(--accent)}
 .lens-body{flex:1;position:relative;min-height:0;display:flex}
@@ -1149,7 +1150,7 @@ function initDwg(){
 }
 const SYMTYPE={pump:'설비',hx:'설비',vsl:'설비',tank:'설비',vlv:'밸브',inst:'계기',line:'배관'};
 function lensFtHTML(tags){const g={};tags.forEach(t=>{const k=SYMTYPE[t[0]];g[k]=(g[k]||0)+1});const MAX=3;
-  return '<div class="lens-ft"><span class="lf-sum">'+Object.entries(g).map(([k,v])=>k+' '+v).join(' · ')+'</span><span class="lf-chips">'+tags.slice(0,MAX).map(t=>'<span title="'+t[3]+'">'+t[4]+'</span>').join('')+(tags.length>MAX?'<button class="more" data-more>+'+(tags.length-MAX)+'</button>':'')+'</span><button class="lf-list" data-list>'+svgI('<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',13)+'목록</button></div>'}
+  return '<div class="lens-ft"><span class="lf-sum">'+Object.entries(g).map(([k,v])=>k+' '+v).join(' · ')+'</span><span class="lf-chips">'+tags.slice(0,MAX).map(t=>'<span title="'+t[3]+'">'+t[4]+'</span>').join('')+'</span>'+(tags.length>MAX?'<button class="more" data-more>+'+(tags.length-MAX)+'</button>':'')+'<button class="lf-list" data-list>'+svgI('<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',13)+'목록</button></div>'}
 function lensListHTML(tags){const types=[...new Set(tags.map(t=>SYMTYPE[t[0]]))];
   return '<div class="lens-list"><div class="ll-hd"><input placeholder="태그 검색" data-q><div class="ll-grp"><button class="on" data-g="">전체 '+tags.length+'</button>'+types.map(k=>'<button data-g="'+k+'">'+k+' '+tags.filter(t=>SYMTYPE[t[0]]===k).length+'</button>').join('')+'</div></div><div class="ll-body">'+tags.map(t=>'<div class="ll-row" data-tag="'+t[3]+'" data-g="'+SYMTYPE[t[0]]+'"><b>'+t[4]+'</b><small>'+t[3]+'</small></div>').join('')+'</div></div>'}
 function bindLensChrome(el,tags){
