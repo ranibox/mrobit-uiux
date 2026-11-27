@@ -135,10 +135,28 @@ main{flex:1;overflow:auto;position:relative}
 .empty p{font-size:var(--fs-body);color:var(--text-2)}
 
 /* workspace */
-.ws{display:grid;grid-template-columns:1fr 360px;gap:8px;padding:8px;height:calc(100vh - 56px)}
+.ws{position:relative;display:flex;padding:8px;height:calc(100vh - 56px);min-height:0}
+.wbox{display:flex;min-width:0;min-height:0;flex:1 1 0}
+.wbox.row{flex-direction:row}.wbox.col{flex-direction:column}
+.wbox>.pane,.wbox>.wbox{flex:1 1 0;min-width:0;min-height:0}
+.split{flex:0 0 8px;position:relative;z-index:3}
+.split.v{cursor:col-resize}.split.h{cursor:row-resize}
+.split::after{content:"";position:absolute;border-radius:2px;background:transparent;transition:background var(--motion-fast)}
+.split.v::after{left:3px;width:2px;top:30%;bottom:30%}.split.h::after{top:3px;height:2px;left:30%;right:30%}
+.split:hover::after,.split.drag::after{background:var(--accent)}
+body.resizing{user-select:none}body.resizing .canvas canvas{pointer-events:none}
+.ptabs{display:flex;gap:2px;padding:0 0 6px}
+.ptab{height:30px;padding:0 12px;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:6px;font-size:var(--fs-label);font-weight:600;color:var(--text-2);background:transparent;border:1px solid transparent}
+.ptab svg{color:var(--text-3)}
+.ptab.on{background:var(--surface,#fff);border-color:var(--line-soft);color:var(--text)}
+.ptab.on svg{color:var(--accent)}
+.pane.hidden{display:none}
 .pane{background:#fff;border:1px solid var(--line-soft);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-.pane-hd{height:40px;display:flex;align-items:center;gap:8px;padding:0 12px;background:var(--panel-hdr);font-size:var(--fs-panel);font-weight:600}
-.pane-hd .x{margin-left:auto;color:var(--text-3);font-weight:400}
+.pane-hd{height:32px;flex:0 0 32px;display:flex;align-items:center;gap:7px;padding:0 6px 0 10px;background:var(--panel-hdr);font-size:13px;font-weight:600;color:var(--text);border-bottom:1px solid var(--line-soft)}
+.pane-hd .pi{color:var(--accent);display:grid;place-items:center}
+.pane-hd .x{margin-left:auto;width:24px;height:24px;border-radius:6px;display:grid;place-items:center;color:var(--text-3);cursor:pointer;transition:background var(--motion-fast),color var(--motion-fast)}
+.pane-hd .x:hover{background:rgba(15,23,42,.08);color:var(--text)}
+.mini-empty .mi{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft,#eaf0ff);color:var(--accent);margin-bottom:4px}
 .vtools{display:flex;gap:2px;padding:6px 10px;border-bottom:1px solid var(--line-soft);background:#f3f7fc}
 .vtools span{font-size:var(--fs-caption);color:var(--text-2);padding:6px 8px;border-radius:6px}
 .vtools span.on{background:#d7e6ff;color:var(--accent);font-weight:600}
@@ -150,9 +168,74 @@ main{flex:1;overflow:auto;position:relative}
 .bgsel button{height:28px;padding:0 10px;border-radius:6px;border:1px solid var(--line);background:#fff;font-size:var(--fs-caption);font-weight:600;color:var(--text-2);transition:background var(--motion-fast),color var(--motion-fast)}
 .bgsel button:hover{background:#f1f5fb}
 .bgsel button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
-.bgdesc{position:absolute;right:10px;bottom:10px;z-index:2;background:rgba(255,255,255,.92);font-size:var(--fs-caption);padding:6px 10px;border-radius:8px;max-width:520px;color:var(--text)}
+.bgdesc{position:absolute;right:10px;top:10px;z-index:2;background:rgba(255,255,255,.92);font-size:var(--fs-caption);padding:6px 10px;border-radius:8px;max-width:520px;color:var(--text)}
 .hint{position:absolute;top:10px;left:10px;background:rgba(255,255,255,.9);font-size:var(--fs-caption);padding:4px 8px;border-radius:6px}
 .side-stack{display:grid;grid-template-rows:1fr 1fr;gap:8px;min-height:0}
+/* D4 뷰 내비게이터 (compact) */
+.vnav{position:absolute;left:12px;bottom:12px;z-index:4}
+.vnav-btn{height:34px;padding:0 10px 0 8px;border-radius:999px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.94);border:1px solid rgba(15,23,42,.1);box-shadow:0 2px 8px rgba(15,23,42,.15);font-size:var(--fs-caption);font-weight:700;color:var(--text);transition:box-shadow var(--motion-fast)}
+.vnav-btn svg{color:var(--accent)}
+.vnav-btn:hover{box-shadow:0 4px 14px rgba(15,23,42,.2)}
+.vnav-pop{position:absolute;left:0;bottom:42px;display:grid;grid-template-columns:repeat(3,44px);gap:4px;padding:6px;background:rgba(255,255,255,.97);border-radius:12px;box-shadow:0 12px 28px rgba(15,23,42,.22),0 0 0 1px rgba(15,23,42,.06);opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity var(--motion-base) var(--ease),transform var(--motion-base) var(--ease)}
+.vnav.open .vnav-pop{opacity:1;transform:none;pointer-events:auto}
+.vnav-pop button{height:30px;border-radius:6px;font-size:var(--fs-caption);font-weight:600;color:var(--text-2);transition:background var(--motion-fast)}
+.vnav-pop button:hover{background:#eef3fb;color:var(--text)}
+.vnav-pop button.on{background:var(--accent);color:#fff}
+.vnav-pop .sp{visibility:hidden}
+/* D5 플로팅 독 */
+.dock{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:2px;padding:5px 6px;background:rgba(255,255,255,.96);border:1px solid rgba(15,23,42,.08);border-radius:14px;box-shadow:0 10px 30px rgba(15,23,42,.18);backdrop-filter:blur(8px);transition:padding var(--motion-base)}
+.dock .grip{width:22px;height:30px;display:grid;place-items:center;color:var(--text-3);cursor:grab}
+.dock .dg{display:flex;align-items:center;gap:2px;padding:0 4px;border-left:1px solid var(--line-soft)}
+.dock .dg .dl{font-size:10px;font-weight:700;color:var(--text-3);margin-right:2px;white-space:nowrap}
+.dock .db{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--text-2);position:relative;transition:background var(--motion-fast),color var(--motion-fast)}
+.dock .db:hover{background:#eef3fb;color:var(--text)}
+.dock .db.on{background:#dfe9ff;color:var(--accent)}
+.dock .db[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:38px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#1f2937;color:#fff;font-size:11px;font-weight:600;padding:4px 8px;border-radius:6px;pointer-events:none}
+.dock .sync{white-space:nowrap;display:flex;align-items:center;gap:6px;height:30px;padding:0 8px;border-radius:8px;font-size:var(--fs-caption);font-weight:700;color:var(--text-2)}
+.dock .sync .sw{width:28px;height:16px}
+.dock .sync .sw::after{width:12px;height:12px}
+.dock.min .dg,.dock.min .grip{display:none}
+.dock .sync .sw{border-radius:8px}.dock .sync .sw.on{background:var(--accent)}.dock .sync .sw.on::after{transform:translateX(12px)}
+.vtb{overflow-x:auto;scrollbar-width:none}.vtb::-webkit-scrollbar{display:none}
+.ptabs-wrap .pane-hd{display:none}
+.ptabs-wrap>.pane{border-top-left-radius:0}
+.xt-file span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.xt-file{min-width:0}
+.dock .db.cl svg{transition:transform var(--motion-base)}
+.dock.min .db.cl svg{transform:rotate(180deg)}
+/* 탐색 패널 (C) */
+.xsel{position:relative;margin-bottom:8px}
+.xsel .select{cursor:pointer;margin:0}
+.xsel .select svg{transition:transform var(--motion-fast)}
+.xsel.open .select{border-color:var(--accent)}
+.xsel.open .select svg{transform:rotate(180deg)}
+.xsel-menu{position:absolute;left:0;right:0;top:40px;z-index:20;background:var(--surface,#fff);border-radius:10px;padding:4px;box-shadow:0 12px 28px rgba(15,23,42,.18),0 0 0 1px var(--line-soft);display:none}
+.xsel.open .xsel-menu{display:block}
+.xsel-menu button{width:100%;height:32px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-radius:6px;font-size:var(--fs-body);color:var(--text);text-align:left}
+.xsel-menu button:hover{background:#f1f5fb}
+.xsel-menu button.on{background:#e8eeff;color:var(--accent);font-weight:600}
+.xt{font-size:var(--fs-label)}
+.xt-row{display:flex;align-items:flex-start;gap:4px;padding:6px 6px;border-radius:8px;cursor:pointer}
+.xt-row:hover{background:#f1f5fb}
+.xt-row .cv{width:16px;height:20px;display:grid;place-items:center;color:var(--text-3);flex:0 0 16px;transition:transform var(--motion-fast)}
+.xt-row.open .cv{transform:rotate(90deg)}
+.xt-row .hs{color:var(--text-3);width:12px;flex:0 0 12px;line-height:20px}
+.xt-row b{font-size:var(--fs-label);font-weight:700;font-variant-numeric:tabular-nums;display:block;line-height:20px}
+.xt-row small{font-size:var(--fs-caption);color:var(--text-3)}
+.xt-kids{margin-left:13px;padding-left:10px;border-left:1px solid var(--line);display:none}
+.xt-row.open+.xt-kids{display:block}
+.xt-f{display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border-radius:6px;color:var(--text-2);cursor:pointer}
+.xt-f:hover{background:#f1f5fb}
+.xt-f.sel{background:#e8eeff;color:var(--accent)}
+.xt-fk{margin-left:9px;padding-left:10px;border-left:1px solid var(--line-soft)}
+.xt-file{display:flex;align-items:center;gap:6px;min-height:28px;padding:4px 8px;border-radius:6px;font-weight:600;color:var(--text);cursor:pointer}
+.xt-file:hover{background:#f1f5fb}
+.xt-file svg,.xt-f svg{color:var(--text-3);flex:0 0 auto}
+body.dark .vnav-btn,body.dark .vnav-pop,body.dark .dock{background:rgba(23,33,48,.96);border-color:var(--line);color:var(--text)}
+body.dark .vnav-pop button:hover,body.dark .dock .db:hover,body.dark .xt-row:hover,body.dark .xt-f:hover,body.dark .xt-file:hover,body.dark .xsel-menu button:hover{background:var(--hover)}
+body.dark .dock .db.on,body.dark .xsel-menu button.on,body.dark .xt-f.sel{background:#22355a;color:#9db8ff}
+body.dark .pane-hd .x:hover{background:rgba(255,255,255,.08)}
+body.dark .ptab.on{background:var(--surface)}
 .mini-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:16px;color:var(--text-2)}
 .mini-empty b{font-size:var(--fs-panel);color:var(--text);font-weight:600}
 
@@ -509,6 +592,11 @@ const NOTES={
  'S90-A-01':{t:'글로벌 헤더 통일 (셸 3종 → 1종)',ch:'워크스페이스·하위 페이지·Live Brief가 각자 쓰던 헤더를 하나로 통일. 하위 페이지의 [뒤로가기 + 가운데 페이지 선택 드롭다운] 제거, 메인 메뉴를 모든 화면에서 항상 노출.',mo:'섹션을 옮겨도 헤더는 고정, 본문만 fade+4px 상승(--motion-base).',em:'L1 — 바뀌는 건 본문뿐이라는 안정감',dev:'공통 Layout 컴포넌트 하나로 라우팅. Live Brief도 같은 레이아웃 사용(전용 헤더 폐기). 헤더 높이 56px.'},
  'S90-A1-01':{t:'로고 = 홈(Start Hub)',ch:'로고 클릭 시 항상 Start Hub로 이동.',mo:'즉시 이동.',em:'L0',dev:'Start Hub를 시작 화면으로 쓰지 않는 사용자도 로고로는 언제든 진입 가능.'},
  'S90-A2-01':{t:'Live Brief 위치: 로고 옆 → 메인 메뉴 첫 항목',ch:'로고 옆 강조 버튼(홈처럼 보임)을 메인 메뉴 첫 항목으로 이동. 앞에 상태 점 표시.',mo:'점은 정적. 정상 #44cc16 / 주의 발생 시 #ff9900로 색만 바뀜(루프 애니메이션 없음).',em:'L0 — 상태만 조용히 알림',dev:'점 색은 Live Brief의 주의 건수 > 0 여부로 결정. 메뉴 우측 하단 3px 액센트 바로 현재 섹션 표시.'},
+ 'S02-C1-01':{t:'탐색 패널 범위 선택',ch:'드롭다운 순서를 태그 → 3D → 도면 → 문서 → 위치 → 내 폴더로 변경. 태그가 기본이자 첫 항목. 선택 항목은 블루 배경 + 체크.',mo:'열기/닫기 즉시(L0), 화살표 180° 회전 120ms.',em:'L0',dev:'기본 범위 = 태그. 마지막 선택 범위는 사용자별로 기억.'},
+ 'S02-C3-01':{t:'태그 트리 — 연결 자료 펼치기',ch:'태그를 펼치면 그 태그를 포함한 문서(n)·도면(n) 폴더와 파일 목록이 나온다. 들여쓰기 + 세로 가이드 라인으로 계층 표시. 파일 클릭 시 해당 뷰어(P&ID·문서)가 열리며 닫혀 있던 패널은 자동으로 다시 열림.',mo:'펼침 화살표 90° 회전 120ms.',em:'L0',dev:'태그-문서/도면 매핑 API 사용(현재 사이트 구현). 연결 자료가 없으면 "연결된 자료 없음" 표시.'},
+ 'S02-D4-01':{t:'D4 뷰 내비게이터 — 컴팩트형',ch:'기존 큐브 7개 원형 배치(약 180×180px)를 접힌 알약 버튼 1개(약 80×34px)로 축소. 버튼에 현재 시점 이름 표시, 클릭 시 3×3 미니 패드(위·좌·등각·우·정면·아래·후면)가 위로 열림.',mo:'패드 페이드+4px 상승 200ms, 카메라 이동 300ms ease-out.',em:'L1',dev:'카메라는 현재 거리 유지하고 방향만 변경. 3D 캔버스 좌하단 고정, 툴바·독과 겹치지 않게.'},
+ 'S02-D5-01':{t:'D5 플로팅 독',ch:'콘텐츠 영역 하단 중앙에 떠 있는 도구 모음. [카메라: P&ID 빠른 열기·선택 객체로 이동·전체 모델·초기 시점] [패널 열기/닫기] [배치: 겹치기·좌우·상하·복합] [3D⇄도면 동기화] [접기]. 그룹 사이 1px 구분선, 아이콘 위 툴팁.',mo:'버튼 hover 120ms, 레이아웃 전환 즉시, 접기 200ms.',em:'L1',dev:'현재 사이트 기능 그대로 + 패널 열기/닫기 그룹 추가. 그립으로 위치 이동(시안에서는 고정).'},
+ 'S02-D5-02':{t:'뷰어 패널 열기·닫기·크기·배치',ch:'3D·P&ID·그래프·문서 4개 패널을 독에서 켜고 끔(패널 헤더 ✕로도 닫힘, 최소 1개 유지). 패널 사이 경계를 드래그해 크기 조절(최소 140px). 배치 4종: 복합(3D 크게 + 오른쪽 세로 스택, 기본) / 좌우 / 상하 / 겹치기(탭 전환).',mo:'경계 hover 시 블루 2px 핸들 표시.',em:'L0',dev:'패널 헤더 32px · 13px SemiBold · 패널 유형 아이콘(3D 큐브, 도면 지도, 그래프 노드, 문서). 레이아웃·크기·열린 패널은 사용자별 저장 권장.'},
  'S90-A4-01':{t:'라이트/다크 모드 토글 (해/달)',ch:'헤더 우측, 검색 옆 아이콘 버튼. 라이트일 때 달, 다크일 때 해 아이콘. Start Hub 포함 전체 화면 적용. 다크: 배경 #0f1620 / 표면 #172130 / 선 #2f3d50 / 본문 #e8edf3. Start Hub 다크 배경은 #16275c → #0f1620 세로 그라데이션.',mo:'아이콘 회전+페이드 200ms, 배경·텍스트 색 200ms 전환.',em:'L1',dev:'색은 CSS 변수(--bg, --surface, --line, --text 등)만 바꾸는 방식. 하드코딩 색은 변수로 치환 필요. 사용자별 저장(계정 단위 권장), 기본값 라이트.'},
  'S90-A2-02':{t:'메인 메뉴 드롭다운 — 그룹 표시',ch:'그룹이 하나뿐인 메뉴(자산·스튜디오)는 카테고리명 없이 바로 목록. 그룹이 2개 이상인 메뉴(운영: 운영·자재 / 업무: 업무·마크업)만 카테고리명 + 아래 1px 구분선 + 2열 배치. 현재 페이지에 체크 표시. 선택된 대메뉴는 글자 폭에 맞춘 3px 밑줄(#8fb0ff, 헤더 하단에 붙임).',mo:'클릭으로 열고 바깥 클릭·Esc로 닫힘. opacity+translateY 200ms.',em:'L1',dev:'메뉴 데이터는 좌측 패널(페이지 목록)과 같은 소스 사용.'},
  'S90-B-01':{t:'좌측 레일 이중 모드',ch:'레일 맨 위 ☰ = 현재 섹션의 페이지 목록(2뎁스). 그 아래는 화면별 도구: 워크스페이스=탐색·인스펙터, Live Brief=목차.',mo:'같은 아이콘을 다시 누르면 패널 접힘(width 248→0, 200ms).',em:'L1',dev:'원칙: 상단=어디로(섹션), 왼쪽=여기서 무엇을(페이지·도구). 접힘 상태는 사용자별 저장.'},
@@ -530,6 +618,32 @@ const NOTES={
 
 /* ---------- Helpers ---------- */
 const $=s=>document.querySelector(s);
+const svgI=(d,w=15)=>`<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const PI={
+ '3d':'<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
+ pid:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/>',
+ graph:'<rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v5M5 17v-3h14v3"/>',
+ doc:'<path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13h6M9 17h6"/>',
+ fold:'<path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>',
+ foldo:'<path d="M3 7a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v1"/><path d="M3 19l3-8h16l-3 8z"/>',
+ chev:'<path d="M9 6l6 6-6 6"/>',
+ down:'<path d="M6 9l6 6 6-6"/>'
+};
+const PANES=[['3d','3D 뷰어'],['pid','P&ID 뷰어'],['graph','그래프 뷰어'],['doc','문서 뷰어']];
+const XSCOPES=['태그','3D','도면','문서','위치','내 폴더'];
+const XTAGS=[
+ ['0-36420-901-HL6D-600','해수 배관 901-HL6D-600',[['설비 통합 매뉴얼 (영문)'],['MVP_설비통합매뉴얼.pdf']],['9-36610-LM-105-901_local.pdf']],
+ ['0-36420-902-HL6D-450','해수 배관 902-HL6D-450',[['MVP_설비통합매뉴얼.pdf']],['9-36610-LM-105-901_local.pdf']],
+ ['0-36420-903-HL6D-450','해수 배관 903-HL6D-450',[],['9-36610-LM-105-901_local.pdf']],
+ ['0-36610-001-HB2D-100','탈염수 배관 001-HB2D-100',[['탈염수 계통 운전 절차서.pdf']],['9-36610-LM-105-901_local.pdf']],
+ ['0-36610-002-HB2D-800','탈염수 배관 002-HB2D-800',[],['9-36610-LM-105-901_local.pdf']],
+ ['0-36611-M-PP-01A','폐회로 냉각수 펌프 A (CCWP A)',[['CCWP 정비 매뉴얼.pdf'],['펌프 성능 시험 성적서.pdf']],['9-36610-LM-105-901_local.pdf','9-36611-LM-105-902_local.pdf']],
+ ['0-36611-M-PP-01B','폐회로 냉각수 펌프 B (CCWP B)',[['CCWP 정비 매뉴얼.pdf']],['9-36611-LM-105-902_local.pdf']],
+ ['0-36612-M-HE-01A','폐회로 냉각수 열교환기 A',[['열교환기 설계 데이터시트.pdf']],['9-36612-LM-105-903_local.pdf']],
+ ['0-36616-M-TK-01','폐회로 냉각수 헤드탱크 (CCW HEAD TANK)',[],['9-36616-LM-105-904_local.pdf']],
+ ['0-36610-CC-MV-001A','차단밸브 0CC/MV/001A',[['밸브 사양서.pdf']],['9-36610-LM-105-901_local.pdf']],
+ ['0-36610-J-CC-PT-001','압력 전송기 0CC/PT/001',[['계기 교정 기록.pdf']],['9-36610-LM-105-901_local.pdf']]
+];
 const ic={
  menu:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>',
  tree:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="6" rx="1.5"/><rect x="14" y="15" width="7" height="6" rx="1.5"/><path d="M6.5 9v9H14"/></svg>',
@@ -600,7 +714,18 @@ function renderLnav(){
   }else if(state.railMode==='explore'){
     title.textContent='탐색 패널';
     const tags=['0-36610-001-HB2D-100|탈염수 배관 001','0-36610-002-HB2D-800|탈염수 배관 002','0-36610-003-HB2D-800|탈염수 배관 003','0-36420-901-HL6D-600|해수 배관 901','0-36420-902-HL6D-450|해수 배관 902','P-101A|CCW 펌프 A','P-101B|CCW 펌프 B','HX-301A|CCW 열교환기 A','TK-01|헤드탱크','FV-201|유량 제어밸브'];
-    body.innerHTML='<div class="select">태그 <span>▾</span></div><div class="field">⌕ TAG ID · 태그명 검색</div>'+tags.map(t=>{const[a,b]=t.split('|');return '<div class="tag-row"><span style="color:#9aa4b2">#</span><span><b>'+a+'</b><small>'+b+'</small></span></div>'}).join('');
+    const sc=state.xscope||'태그';
+    const sel='<div class="xsel" id="xsel" data-pin="S02-C1-01"><div class="select" id="xselBtn">'+sc+svgI(PI.down,16)+'</div><div class="xsel-menu">'+XSCOPES.map(x=>'<button data-x="'+x+'" class="'+(x===sc?'on':'')+'">'+x+(x===sc?' <span>✓</span>':'')+'</button>').join('')+'</div></div>';
+    const fileRow=(name,kind)=>'<div class="xt-file" title="'+name+'">'+svgI(kind==='pid'?PI.pid:PI.doc,14)+'<span>'+name+'</span></div>';
+    const folder=(label,list,kind)=>list.length?'<div class="xt-f">'+svgI(PI.foldo,15)+'<span>'+label+' ('+list.length+')</span></div><div class="xt-fk">'+list.map(n=>fileRow(Array.isArray(n)?n[0]:n,kind)).join('')+'</div>':'';
+    const tree=sc==='태그'?'<div class="xt" data-pin="S02-C3-01">'+XTAGS.map((t,i)=>'<div class="xt-row'+(i===0?' open':'')+'"><span class="cv">'+svgI(PI.chev,14)+'</span><span class="hs">#</span><span><b>'+t[0]+'</b><small>'+t[1]+'</small></span></div><div class="xt-kids">'+folder('문서',t[2],'doc')+folder('도면',t[3],'pid')+((t[2].length||t[3].length)?'':'<div class="xt-f" style="color:var(--text-3)">연결된 자료 없음</div>')+'</div>').join('')+'</div>':'<div class="empty" style="padding:32px 8px"><b style="font-size:14px">'+sc+' 목록</b><p>범위를 바꾸면 해당 목록이 표시돼요.</p></div>';
+    body.innerHTML=sel+'<div class="field">⌕ TAG ID · 태그명 검색</div>'+tree;
+    const xs=$('#xsel');$('#xselBtn').onclick=e=>{e.stopPropagation();xs.classList.toggle('open')};
+    xs.querySelectorAll('.xsel-menu button').forEach(b=>b.onclick=e=>{e.stopPropagation();state.xscope=b.dataset.x;renderLnav()});
+    document.addEventListener('click',()=>xs.classList.remove('open'),{once:true});
+    body.querySelectorAll('.xt-row').forEach(r=>r.onclick=()=>r.classList.toggle('open'));
+    body.querySelectorAll('.xt-f').forEach(f=>f.onclick=()=>{body.querySelectorAll('.xt-f').forEach(x=>x.classList.remove('sel'));f.classList.add('sel')});
+    body.querySelectorAll('.xt-file').forEach(f=>f.onclick=()=>{const isPid=f.innerHTML.includes('M9 4L3 6');wsOpenPane(isPid?'pid':'doc');toast((isPid?'P&ID 뷰어':'문서 뷰어')+'에 「'+f.textContent+'」를 열었어요.')});
   }else if(state.railMode==='insp'){
     title.textContent='인스펙터 패널';
     body.innerHTML='<div class="empty" style="padding:40px 8px"><div class="ic">'+ic.insp+'</div><b style="font-size:15px">선택한 객체가 없어요</b><p>3D나 도면에서 설비를 선택하면 속성이 여기에 표시돼요.</p></div>';
@@ -649,8 +774,20 @@ V.brief=()=>`<div class="lb"><button class="btn disp-btn" id="dispBtn" data-pin=
  <div class="lbk"><div class="card warn"><small>CCW 공급 압력</small><b>7.2<i>bar(g)</i></b><span>LO 7.5 · 현재 7.2</span></div><div class="card"><small>CCWP A 토출 압력</small><b>7.3<i>bar(g)</i></b><span>예비 자동 기동 7.0</span></div><div class="card warn"><small>CCWP B 토출 압력</small><b>8.3<i>bar(g)</i></b><span>기동 피드백 확인 필요</span></div><div class="card"><small>CCW 공급 온도</small><b>38.4<i>°C</i></b><span>설정 38 · HI 42</span></div><div class="card"><small>헤드탱크 액위</small><b>1036<i>mm</i></b><span>저액위 기준 500</span></div></div>
  <h2 class="sec-title" style="margin-top:28px">오늘 결정할 일 3건</h2>
  <div class="dec"><div class="card"><span class="k">1 · 자재 확인</span><b>CCWP A 베어링 세트 보충</b><p>WO-26-0018 점검에 필요한 베어링 세트는 총 1개 중 1개 예약으로 가용 0개입니다.</p></div><div class="card"><span class="k">2 · 기동 확인</span><b>CCWP B 보호계전기 트립 확인</b><p>TM-26-0049 기동 요청 이후 보호계전기 트립과 운전 피드백 미확인이 기록됐습니다.</p></div><div class="card"><span class="k">3 · 납기 판단</span><b>헤드탱크 통기관 부품 확보</b><p>WO-26-0021 통기관 밸브 점검용 시트 키트 현재고 0개. 발주 예상일과 작업 범위를 확인합니다.</p></div></div></div>`;
-V.workspace=()=>`<div class="ws"><div class="pane"><div class="pane-hd">▣ 3D 뷰어<span class="x">✕</span></div><div class="vtb"><div class="tg"><div class="tgb"><button class="tb" title="선택 객체 보기" aria-label="선택 객체 보기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><span class="cnt0">0</span></div><span>선택 객체 보기</span></div><div class="tg"><div class="tgb"><button class="tb" title="확대" aria-label="확대" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="축소" aria-label="축소" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="초기 카메라 시점" aria-label="초기 카메라 시점" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button><button class="tb" title="선택 객체로 이동" aria-label="선택 객체로 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button></div><span>카메라</span></div><div class="tg"><div class="tgb"><button class="tb on" title="궤도 회전" aria-label="궤도 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12a8 4 0 0 0 16 0a8 4 0 0 0-16 0"/></svg></button><button class="tb" title="걷기" aria-label="걷기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 2v4M7 12l3-4 4 1 3 3"/></svg></button><button class="tb" title="핫스팟 이동" aria-label="핫스팟 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></button></div><span>이동 방식</span></div><div class="tg hl" data-pin="S02-D3-01"><div class="tgb"><button class="tb" title="자동 회전" aria-label="자동 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button><button class="tb on" title="그리드 / 현장 기준" aria-label="그리드 / 현장 기준" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button><button class="tb on" title="깊이 안개" aria-label="깊이 안개" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12a4 4 0 0 0 0-8"/><path d="M3 14h18M5 19h14"/></svg></button><button class="tb" title="와이어프레임" aria-label="와이어프레임" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg></button><span class="tbwrap"><button class="tb" title="배경" aria-label="배경" id="bgBtn" aria-haspopup="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 14l5-4 4 3 3-2 6 5"/><circle cx="16" cy="8" r="1.5"/></svg></button><div class="bgpop" id="bgpop"><div class="bp-hd"><b>배경</b><span id="roleTag" class="roletag"></span></div><div class="bp-list" id="bgsel"></div><p class="bp-ft" id="bgnote"></p></div></span></div><span>표시 설정</span></div><div class="tg"><div class="tgb"><button class="tb" title="클리핑" aria-label="클리핑" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12a3 3 0 0 0 3 3h12"/><path d="M3 6h12a3 3 0 0 1 3 3v12"/></svg></button><button class="tb" title="거리 측정" aria-label="거리 측정" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></button><button class="tb" title="3D 노트" aria-label="3D 노트" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5"/></svg></button></div><span>클리핑 · 노트</span></div><div class="tg"><div class="tgb"><button class="tb" title="레이어 트리" aria-label="레이어 트리" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></button></div><span>레이어 트리</span></div><div class="tg"><div class="tgb"><button class="tb" title="성능 모니터" aria-label="성능 모니터" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></button></div><span>성능 모니터</span></div><button class="tb collapse" title="접기">⌃</button></div><div class="canvas" id="c3d" style="background-image:url(${IMG3D})"><span class="hint">Ctrl+클릭 다중 선택 · Shift+드래그 영역 선택</span><span class="bgdesc" id="bgdesc"></span></div></div>
- <div class="side-stack"><div class="pane"><div class="pane-hd">▤ P&ID 뷰어<span class="x">✕</span></div><div class="mini-empty"><b>P&ID 도면 목록</b><span>탐색 패널에서 도면을 선택하면 여기에 열려요.</span></div></div><div class="pane"><div class="pane-hd">▤ 문서 뷰어<span class="x">✕</span></div><div class="mini-empty"><b>문서 목록</b><span>탐색 패널에서 문서를 선택하면 여기에 열려요.</span></div></div></div></div>`;
+const paneHd=(k,t)=>`<div class="pane-hd"><span class="pi">${svgI(PI[k],15)}</span>${t}<button class="x" data-close="${k}" title="패널 닫기" aria-label="${t} 닫기">${svgI('<path d="M6 6l12 12M18 6L6 18"/>',14)}</button></div>`;
+const miniEmpty=(k,b,t)=>`<div class="mini-empty"><span class="mi">${svgI(PI[k],22)}</span><b>${b}</b><span>${t}</span></div>`;
+V.workspace=()=>`<div class="ws lay-mix" id="ws"><div class="pane" data-pane="3d">${paneHd('3d','3D 뷰어')}<div class="vtb"><div class="tg"><div class="tgb"><button class="tb" title="선택 객체 보기" aria-label="선택 객체 보기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><span class="cnt0">0</span></div><span>선택 객체 보기</span></div><div class="tg"><div class="tgb"><button class="tb" title="확대" aria-label="확대" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="축소" aria-label="축소" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="초기 카메라 시점" aria-label="초기 카메라 시점" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button><button class="tb" title="선택 객체로 이동" aria-label="선택 객체로 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button></div><span>카메라</span></div><div class="tg"><div class="tgb"><button class="tb on" title="궤도 회전" aria-label="궤도 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12a8 4 0 0 0 16 0a8 4 0 0 0-16 0"/></svg></button><button class="tb" title="걷기" aria-label="걷기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 2v4M7 12l3-4 4 1 3 3"/></svg></button><button class="tb" title="핫스팟 이동" aria-label="핫스팟 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></button></div><span>이동 방식</span></div><div class="tg hl" data-pin="S02-D3-01"><div class="tgb"><button class="tb" title="자동 회전" aria-label="자동 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button><button class="tb on" title="그리드 / 현장 기준" aria-label="그리드 / 현장 기준" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button><button class="tb on" title="깊이 안개" aria-label="깊이 안개" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12a4 4 0 0 0 0-8"/><path d="M3 14h18M5 19h14"/></svg></button><button class="tb" title="와이어프레임" aria-label="와이어프레임" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg></button><span class="tbwrap"><button class="tb" title="배경" aria-label="배경" id="bgBtn" aria-haspopup="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 14l5-4 4 3 3-2 6 5"/><circle cx="16" cy="8" r="1.5"/></svg></button><div class="bgpop" id="bgpop"><div class="bp-hd"><b>배경</b><span id="roleTag" class="roletag"></span></div><div class="bp-list" id="bgsel"></div><p class="bp-ft" id="bgnote"></p></div></span></div><span>표시 설정</span></div><div class="tg"><div class="tgb"><button class="tb" title="클리핑" aria-label="클리핑" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12a3 3 0 0 0 3 3h12"/><path d="M3 6h12a3 3 0 0 1 3 3v12"/></svg></button><button class="tb" title="거리 측정" aria-label="거리 측정" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></button><button class="tb" title="3D 노트" aria-label="3D 노트" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5"/></svg></button></div><span>클리핑 · 노트</span></div><div class="tg"><div class="tgb"><button class="tb" title="레이어 트리" aria-label="레이어 트리" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></button></div><span>레이어 트리</span></div><div class="tg"><div class="tgb"><button class="tb" title="성능 모니터" aria-label="성능 모니터" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></button></div><span>성능 모니터</span></div><button class="tb collapse" title="접기">⌃</button></div><div class="canvas" id="c3d" style="background-image:url(${IMG3D})"><div class="vnav" id="vnav" data-pin="S02-D4-01"><div class="vnav-pop"><span class="sp"></span><button data-v="top">위</button><span class="sp"></span><button data-v="left">좌</button><button data-v="iso" class="on">등각</button><button data-v="right">우</button><button data-v="front">정면</button><button data-v="bottom">아래</button><button data-v="back">후면</button></div><button class="vnav-btn" id="vnavBtn" title="뷰 내비게이터">${svgI(PI['3d'],15)}<span id="vnavLbl">등각</span></button></div><span class="hint">Ctrl+클릭 다중 선택 · Shift+드래그 영역 선택</span><span class="bgdesc" id="bgdesc"></span></div></div>
+ <div class="pane" data-pane="pid">${paneHd('pid','P&ID 뷰어')}${miniEmpty('pid','P&ID 도면 목록','탐색 패널에서 도면을 선택하면 여기에 열려요.')}</div>
+ <div class="pane" data-pane="graph">${paneHd('graph','그래프 뷰어')}${miniEmpty('graph','영향 그래프','알람에서 그래프를 열면 연결 관계를 확인할 수 있어요.')}</div>
+ <div class="pane" data-pane="doc">${paneHd('doc','문서 뷰어')}${miniEmpty('doc','문서 목록','탐색 패널에서 문서를 선택하면 여기에 열려요.')}</div>
+ <div class="dock" id="dock" data-pin="S02-D5-01">
+  <span class="grip" title="드래그하여 도구 모음 이동">${svgI('<circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/>',15)}</span>
+  <div class="dg"><button class="db" data-act="pidq" data-tip="P&ID 빠른 열기">${svgI(PI.pid)}</button><button class="db" data-act="focus" data-tip="선택 객체로 이동">${svgI('<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>')}</button><button class="db" data-act="fit" data-tip="전체 모델 보기">${svgI('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>')}</button><button class="db" data-act="home" data-tip="초기 카메라 시점">${svgI('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>')}</button></div>
+  <div class="dg" data-pin="S02-D5-02"><span class="dl">패널</span>${PANES.map(p=>`<button class="db on" data-pv="${p[0]}" data-tip="${p[1]} 열기/닫기">${svgI(PI[p[0]])}</button>`).join('')}</div>
+  <div class="dg"><span class="dl">배치</span><button class="db" data-lay="tabs" data-tip="겹치기 (탭 전환)">${svgI('<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M3 7l2-4h6l2 4"/>')}</button><button class="db" data-lay="cols" data-tip="좌우 배치">${svgI('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/>')}</button><button class="db" data-lay="rows" data-tip="상하 배치">${svgI('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 12h18"/>')}</button><button class="db on" data-lay="mix" data-tip="복합 배치 (기본)">${svgI('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M14 4v16M14 12h7"/>')}</button></div>
+  <div class="dg"><label class="sync" title="3D 도면 동기화">3D ⇄ 도면<span class="sw on" id="syncSw"></span></label></div>
+  <button class="db cl" data-act="min" data-tip="독 접기">${svgI('<path d="M15 6l-6 6 6 6"/>')}</button>
+ </div></div>`;
 V['tag-master']=(p)=>{const rows=[['공급 경계점 (증기터빈 윤활유 쿨러)','TP-ST-503','BOUNDARY'],['공급 경계점 (증기터빈 윤활유 쿨러)','TP-ST-502','BOUNDARY'],['보조 냉각수 계통 입구 외부 연결점','OPC-04','BOUNDARY'],['보조 냉각수 계통 출구 외부 연결점','OPC-05','BOUNDARY'],['탈염수 배관 001-HB2D-100','0-36610-001-HB2D-100','LINE'],['탈염수 배관 002-HB2D-800','0-36610-002-HB2D-800','LINE'],['탈염수 배관 003-HB2D-800','0-36610-003-HB2D-800','LINE'],['탈염수 배관 004-HB2D-800','0-36610-004-HB2D-800','LINE'],['탈염수 배관 005-HB2D-700','0-36610-005-HB2D-700','LINE'],['탈염수 배관 006-HB2D-700','0-36610-006-HB2D-700','LINE']];
  return `<div class="page">${crumb(p.sec,p.group,p.label)}<div class="ptitle" data-pin="S90-T-01">태그 마스터</div><p class="pdesc">설비 태그와 자산 식별번호, 도면·3D 연결 상태를 관리합니다.</p>
  <div class="card" style="margin-top:16px;overflow:hidden"><div class="toolbar"><div class="field" style="width:280px;margin:0">⌕ 태그 이름 · 자산 식별번호 검색</div><span style="margin-left:auto;font-size:13px;color:var(--text-3)">조회 결과 <b class="num" style="color:var(--text)">50</b></span><button class="btn">새로고침</button></div>
@@ -778,6 +915,64 @@ function buildDemoPlant(THREE,scene){
   add(new THREE.CylinderGeometry(.2,.2,15),blue,-2,8,-23);
 }
 let V3=null;
+/* ---------- 워크스페이스 레이아웃 (S02-D5) ---------- */
+const WS={lay:'mix',vis:{'3d':true,pid:true,graph:true,doc:true},tab:'3d',sz:{}};
+function wsOpenPane(k){WS.vis[k]=true;if(WS.lay==='tabs')WS.tab=k;wsArrange()}
+function wsArrange(){
+  const ws=$('#ws');if(!ws)return;const dock=$('#dock');
+  const panes={};ws.querySelectorAll('.pane[data-pane]').forEach(p=>panes[p.dataset.pane]=p);
+  const vis=PANES.map(p=>p[0]).filter(k=>WS.vis[k]);
+  Object.values(panes).forEach(p=>{p.classList.toggle('hidden',!WS.vis[p.dataset.pane]);p.style.flex=''});
+  ws.querySelectorAll(':scope>.wbox,:scope>.ptabs-wrap').forEach(n=>{n.querySelectorAll('.pane').forEach(p=>ws.insertBefore(p,dock));n.remove()});
+  const sp=d=>{const e=document.createElement('div');e.className='split '+d;return e};
+  const box=(dir,items,key)=>{const b=document.createElement('div');b.className='wbox '+dir;b.dataset.key=key;items.forEach((it,i)=>{if(i)b.appendChild(sp(dir==='row'?'v':'h'));b.appendChild(it)});return b};
+  const P=k=>panes[k];
+  let root;
+  if(WS.lay==='mix'){
+    const side=vis.filter(k=>k!=='3d').map(P);
+    const items=[];if(WS.vis['3d'])items.push(P('3d'));if(side.length)items.push(side.length>1?box('col',side,'mix-side'):side[0]);
+    root=box('row',items,'mix-main');
+    if(WS.vis['3d']&&side.length){const last=root.lastElementChild;const g=WS.sz['mix-main'];P('3d').style.flex=(g?g[0]:3)+' 1 0px';last.style.flex=(g?g[1]:1)+' 1 0px'}
+  }else if(WS.lay==='cols'||WS.lay==='rows'){root=box(WS.lay==='cols'?'row':'col',vis.map(P),WS.lay)}
+  else{
+    if(!WS.vis[WS.tab])WS.tab=vis[0];
+    root=document.createElement('div');root.className='wbox col ptabs-wrap';
+    const strip=document.createElement('div');strip.className='ptabs';
+    strip.innerHTML=vis.map(k=>{const t=PANES.find(p=>p[0]===k)[1];return `<button class="ptab ${k===WS.tab?'on':''}" data-t="${k}">${svgI(PI[k],14)}${t}</button>`}).join('');
+    root.appendChild(strip);vis.forEach(k=>{const p=P(k);p.classList.toggle('hidden',k!==WS.tab);root.appendChild(p)});
+    strip.querySelectorAll('.ptab').forEach(b=>b.onclick=()=>{WS.tab=b.dataset.t;wsArrange()});
+  }
+  ws.insertBefore(root,dock);
+  ws.querySelectorAll('.wbox[data-key]').forEach(b=>{const g=WS.sz[b.dataset.key];if(!g)return;const kids=[...b.children].filter(c=>!c.classList.contains('split'));if(g.length===kids.length)kids.forEach((c,i)=>c.style.flex=g[i]+' 1 0px')});
+  dock.querySelectorAll('[data-pv]').forEach(b=>b.classList.toggle('on',!!WS.vis[b.dataset.pv]));
+  dock.querySelectorAll('[data-lay]').forEach(b=>b.classList.toggle('on',b.dataset.lay===WS.lay));
+  setTimeout(placePins,60);
+}
+function initWS(){
+  const ws=$('#ws');if(!ws)return;const dock=$('#dock');
+  wsArrange();
+  ws.addEventListener('click',e=>{const c=e.target.closest('[data-close]');if(!c)return;const k=c.dataset.close;if(PANES.filter(p=>WS.vis[p[0]]).length<=1){toast('패널은 최소 1개가 열려 있어야 해요.');return}WS.vis[k]=false;wsArrange();toast(PANES.find(p=>p[0]===k)[1]+'를 닫았어요. 아래 독의 [패널]에서 다시 열 수 있어요.')});
+  dock.querySelectorAll('[data-pv]').forEach(b=>b.onclick=()=>{const k=b.dataset.pv;if(WS.vis[k]&&PANES.filter(p=>WS.vis[p[0]]).length<=1){toast('패널은 최소 1개가 열려 있어야 해요.');return}WS.vis[k]=!WS.vis[k];if(WS.vis[k]&&WS.lay==='tabs')WS.tab=k;wsArrange()});
+  dock.querySelectorAll('[data-lay]').forEach(b=>b.onclick=()=>{WS.lay=b.dataset.lay;wsArrange()});
+  dock.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const a=b.dataset.act;if(a==='min'){dock.classList.toggle('min');return}if(a==='pidq'){wsOpenPane('pid');toast('선택한 자산의 P&ID 도면을 열었어요.');return}if(a==='fit'||a==='home')setView('iso');else toast('먼저 3D나 탐색 패널에서 자산을 선택하세요.')});
+  const sw=$('#syncSw');sw.onclick=e=>{e.preventDefault();sw.classList.toggle('on');toast(sw.classList.contains('on')?'3D와 도면 선택이 함께 움직여요.':'3D·도면 동기화를 껐어요.')};
+  // splitter drag
+  ws.addEventListener('pointerdown',e=>{const s=e.target.closest('.split');if(!s)return;e.preventDefault();const box=s.parentElement,row=box.classList.contains('row');
+    const kids=[...box.children].filter(c=>!c.classList.contains('split'));const sizes=kids.map(c=>row?c.getBoundingClientRect().width:c.getBoundingClientRect().height);
+    kids.forEach((c,i)=>c.style.flex=sizes[i]+' 1 0px');const ai=[...box.children].indexOf(s);const A=box.children[ai-1],B=box.children[ai+1];const ia=kids.indexOf(A),ib=kids.indexOf(B);
+    const start=row?e.clientX:e.clientY,a0=sizes[ia],b0=sizes[ib];s.classList.add('drag');document.body.classList.add('resizing');
+    const mv=ev=>{const d=(row?ev.clientX:ev.clientY)-start;const na=Math.max(140,Math.min(a0+b0-140,a0+d));sizes[ia]=na;sizes[ib]=a0+b0-na;A.style.flex=na+' 1 0px';B.style.flex=(a0+b0-na)+' 1 0px'};
+    const up=()=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);s.classList.remove('drag');document.body.classList.remove('resizing');WS.sz[box.dataset.key]=sizes.slice();placePins()};
+    document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up)});
+  // D4
+  const vn=$('#vnav');$('#vnavBtn').onclick=e=>{e.stopPropagation();vn.classList.toggle('open')};
+  vn.querySelectorAll('[data-v]').forEach(b=>b.onclick=e=>{e.stopPropagation();setView(b.dataset.v);vn.querySelectorAll('[data-v]').forEach(x=>x.classList.toggle('on',x===b));$('#vnavLbl').textContent=b.textContent;vn.classList.remove('open')});
+  document.addEventListener('click',e=>{if(!e.target.closest('#vnav'))vn&&vn.classList.remove('open')});
+}
+function setView(v){if(!V3||!V3.camera)return;const t=V3.controls.target,d=V3.camera.position.distanceTo(t);
+  const dir={iso:[-.45,.55,.7],top:[0,1,.001],bottom:[0,-1,.001],front:[0,.12,1],back:[0,.12,-1],left:[-1,.12,0],right:[1,.12,0]}[v];
+  const n=Math.hypot(...dir);const to=dir.map(x=>x/n*d);const from=V3.camera.position.clone();V3.controls.maxPolarAngle=v==='bottom'?Math.PI:1.48;
+  const t0=performance.now();const st=k=>{const p=Math.min(1,(k-t0)/300),e=1-Math.pow(1-p,3);V3.camera.position.set(from.x+(t.x+to[0]-from.x)*e,from.y+(t.y+to[1]-from.y)*e,from.z+(t.z+to[2]-from.z)*e);V3.camera.lookAt(t);if(p<1)requestAnimationFrame(st)};requestAnimationFrame(st)}
 function stop3D(){if(!V3)return;cancelAnimationFrame(V3.raf);V3.ro.disconnect();V3.renderer.dispose();V3=null}
 /* ---- 설정 저장 구조: 시스템 기본 → 설정화면(3D 스튜디오) → 역할 → 개인 ---- */
 const ROLES=[['operator','운전원'],['maint','정비원'],['control','관제 화면 PC'],['admin','관리자']];
@@ -802,7 +997,7 @@ function mount3D(host,onFail){
     let fitted=false;
     const resize=()=>{const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();if(!fitted){const k=Math.max(1,1.5/camera.aspect);camera.position.set(-55*k,62*k,92*k);fitted=true}};
     const ro=new ResizeObserver(resize);ro.observe(host);resize();
-    V3={renderer,ro,raf:0,controls};
+    V3={renderer,ro,raf:0,controls,camera};
     const loop=()=>{if(!V3)return;V3.raf=requestAnimationFrame(loop);controls.update();renderer.render(scene,camera)};loop();
     return {apply:p=>applyEnvironment(THREE,scene,adj(p),{w:86,d:56}),controls};
   }catch(e){console.error(e);onFail&&onFail('WebGL을 사용할 수 없어 캡처 이미지로 표시합니다.');return null}
@@ -879,7 +1074,7 @@ function bindView(){
   const hs=$('#hubSearch');if(hs)hs.onclick=()=>toast('통합 검색 오버레이는 2차 항목(S90-A3-01)이에요.');
   const kp=document.querySelectorAll('.kpi b[data-to]');
   if(kp.length){const first=!sessionStorageSafe('hubSeen');kp.forEach(b=>{const to=+b.dataset.to;if(!first){b.textContent=to.toLocaleString();return}const t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/800);const e=1-Math.pow(1-k,3);b.textContent=Math.round(to*e).toLocaleString();if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
-  init3D();initStudio();
+  init3D();initWS();initStudio();
   const db=$('#dispBtn');if(db)db.onclick=()=>{document.body.classList.toggle('display-mode');db.textContent=document.body.classList.contains('display-mode')?'⤡ 기본 크기':'⤢ 표시 모드';setTimeout(placePins,50)};
 }
 function sessionStorageSafe(k){try{const v=sessionStorage.getItem(k);sessionStorage.setItem(k,'1');return v}catch(e){const v=mem['ss'+k];mem['ss'+k]='1';return v}}
@@ -912,7 +1107,7 @@ addEventListener('hashchange',route);
 
 /* ---------- Init ---------- */
 setStartPref(startPref(),true);
-const PIN_SCREEN={'S05-H-01':'#/studio/3d-studio','S05-H-02':'#/studio/3d-studio','S05-H-03':'#/studio/3d-studio','S02-D3-01':'#/assets/workspace','S00-1-01':'#/login','S00-H-01':'#/start','S00-H-03':'#/start','S00-H-04':'#/start','S00-H-05':'#/start','S00-H-06':'#/start','S90-T-01':'#/start','S01-D-01':'#/brief','S90-B-02':'#/ops/alarms','S90-Z-05':'#/ops/alarms','S90-B-01':'#/assets/workspace','S90-A4-01':'#/start','S90-A2-02':'#/ops/alarms'};
+const PIN_SCREEN={'S05-H-01':'#/studio/3d-studio','S05-H-02':'#/studio/3d-studio','S05-H-03':'#/studio/3d-studio','S02-D3-01':'#/assets/workspace','S00-1-01':'#/login','S00-H-01':'#/start','S00-H-03':'#/start','S00-H-04':'#/start','S00-H-05':'#/start','S00-H-06':'#/start','S90-T-01':'#/start','S01-D-01':'#/brief','S90-B-02':'#/ops/alarms','S90-Z-05':'#/ops/alarms','S90-B-01':'#/assets/workspace','S90-A4-01':'#/start','S02-C1-01':'#/assets/workspace','S02-C3-01':'#/assets/workspace','S02-D4-01':'#/assets/workspace','S02-D5-01':'#/assets/workspace','S02-D5-02':'#/assets/workspace','S90-A2-02':'#/ops/alarms'};
 let deep=(location.hash.match(/[?&]pin=([\w-]+)/)||[])[1];
 const pm=location.hash.match(/^#pin-([\w-]+)$/);
 if(pm){deep=pm[1];const scr=PIN_SCREEN[deep]||'#/start';history.replaceState(null,'',scr==='#/login'?'#/start':scr);if(scr==='#/login')showLogin()}
