@@ -183,7 +183,7 @@ body.resizing{user-select:none}body.resizing .canvas canvas{pointer-events:none}
 .vnav [data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);white-space:nowrap;background:#1f2937;color:#fff;font-size:11px;font-weight:600;padding:3px 7px;border-radius:5px;pointer-events:none;z-index:5}
 body.dark .vnav .vcen{background:rgba(23,33,48,.9);color:#b6c0cd}
 /* 탐색 도구: 미니맵 + 뷰 내비게이터 (우측 상단 한 묶음) */
-.navstack{position:absolute;right:10px;top:10px;z-index:4;display:flex;flex-direction:column;align-items:flex-end;gap:6px;pointer-events:none}
+.navstack{position:absolute;right:10px;top:10px;z-index:4;display:flex;flex-direction:row;align-items:flex-start;justify-content:flex-end;gap:8px;pointer-events:none}
 .navstack>*{pointer-events:auto}
 .mmap{position:relative;width:180px;height:118px;background:rgba(255,255,255,.9);border:1px solid rgba(15,23,42,.12);border-radius:8px;box-shadow:0 4px 14px rgba(15,23,42,.14);overflow:hidden;cursor:crosshair;transition:opacity var(--motion-base),transform var(--motion-base)}
 .mm-lb{position:absolute;left:6px;top:4px;font-size:10px;font-weight:700;color:var(--text-3);pointer-events:none}
@@ -192,6 +192,51 @@ body.dark .vnav .vcen{background:rgba(23,33,48,.9);color:#b6c0cd}
 @keyframes mmPulse{0%{r:5;opacity:.9}100%{r:14;opacity:0}}
 #mmSel .pulse{animation:mmPulse 1.4s ease-out infinite;fill:none;stroke:var(--accent);stroke-width:1.5}
 body.dark .mmap{background:rgba(23,33,48,.9);border-color:var(--line)}
+/* P&ID 도면 + 3D 렌즈 (S02-E-01) */
+.ptool{height:34px;flex:0 0 34px;display:flex;align-items:center;gap:8px;padding:0 8px 0 10px;border-bottom:1px solid var(--line-soft);background:var(--surface,#fff);font-size:var(--fs-caption);color:var(--text-2);position:relative;z-index:3}
+.ptool .dn{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.ptool .dn svg{color:var(--text-3);flex:0 0 auto}
+.lens-sw{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--text-2);cursor:pointer;white-space:nowrap;padding:3px 6px;border-radius:6px}
+.lens-sw .sw{width:28px;height:16px;border-radius:8px}.lens-sw .sw::after{width:12px;height:12px}
+.lens-sw.on{color:var(--accent);background:#e8eeff}.lens-sw.on .sw{background:var(--accent)}.lens-sw.on .sw::after{transform:translateX(12px)}
+.solo-tip{display:none;align-items:center;gap:6px;white-space:nowrap;color:var(--text-3)}
+.solo-tip button{font-size:var(--fs-caption);font-weight:700;color:var(--accent);padding:2px 6px;border-radius:5px}
+.solo-tip button:hover{background:#e8eeff}
+.pane.lens-on:not(.solo) .solo-tip{display:flex}
+.lens-cfg{position:fixed;z-index:300;width:250px;background:var(--surface,#fff);border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,.2),0 0 0 1px var(--line-soft);padding:12px;display:none;font-size:var(--fs-caption);color:var(--text-2)}
+.lens-cfg.open{display:block}
+.lens-cfg b{display:block;font-size:var(--fs-label);color:var(--text);margin-bottom:8px}
+.lc-row{display:flex;align-items:center;justify-content:space-between;margin:6px 0}
+.seg{display:flex;background:#eef2f7;border-radius:7px;padding:2px}
+.seg button{font-size:11px;font-weight:600;padding:3px 8px;border-radius:5px;color:var(--text-2)}
+.seg button.on{background:#fff;color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.lens-cfg p{margin-top:8px;line-height:16px;color:var(--text-3)}
+.dwg{flex:1;position:relative;min-height:0;background:#fbfcfe;overflow:hidden}
+.dwg svg{position:absolute;inset:0;width:100%;height:100%}
+.dwg .sym{cursor:pointer}
+.dwg svg .ln,.dwg svg .sh{vector-effect:non-scaling-stroke;stroke-width:1.2px}
+.dwg svg .frame{vector-effect:non-scaling-stroke;stroke-width:1px}
+.dwg .sym:hover .ln,.dwg .sym:hover .sh{stroke:#4370ff}
+.dwg .sym.hl .sh{stroke:#4370ff;stroke-width:2px;fill:rgba(67,112,255,.12)}
+.dwg .sym.hl text{fill:#4370ff;font-weight:700}
+.dwg .sym.inlens .sh{fill:rgba(67,112,255,.08)}
+.pane.lens-on .dwg{cursor:crosshair}
+.lasso{position:absolute;display:none;border:1.5px dashed var(--accent);background:rgba(67,112,255,.08);border-radius:4px;pointer-events:none;z-index:4}
+.lens{position:absolute;z-index:6;background:#fff;border-radius:12px;box-shadow:0 16px 40px rgba(15,23,42,.28),0 0 0 1px rgba(67,112,255,.35);overflow:hidden;display:flex;flex-direction:column;animation:lensIn var(--motion-base) var(--ease)}
+@keyframes lensIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.lens-hd{height:32px;display:flex;align-items:center;gap:6px;padding:0 6px 0 10px;font-size:12px;font-weight:700;color:var(--text);border-bottom:1px solid var(--line-soft);background:#f5f8ff}
+.lens-hd svg{color:var(--accent)}
+.lens-hd .act{margin-left:auto;display:flex;gap:2px}
+.lens-hd .act button{height:24px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:700;color:var(--text-2)}
+.lens-hd .act button:hover{background:#e8eeff;color:var(--accent)}
+.lens-cv{flex:1;position:relative;background:#dfe7f1}
+.lens-cv canvas{position:absolute;inset:0;display:block}
+.lens-tags{position:absolute;left:8px;bottom:8px;right:8px;display:flex;flex-wrap:wrap;gap:4px;z-index:2;pointer-events:none}
+.lens-tags span{font-size:10px;font-weight:700;background:rgba(255,255,255,.92);color:var(--text);padding:2px 6px;border-radius:4px;font-variant-numeric:tabular-nums}
+.mm-x{position:absolute;right:4px;top:4px;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;color:var(--text-3);background:rgba(255,255,255,.8);z-index:2}
+.mm-x:hover{background:#fff;color:var(--text)}
+body.dark .dwg{background:#141d2a}body.dark .lens{background:var(--surface)}body.dark .lens-hd{background:#1c2a3f}body.dark .seg{background:#223047}body.dark .seg button.on{background:var(--surface)}body.dark .lens-sw.on{background:#22355a}body.dark .mm-x{background:rgba(23,33,48,.8)}
+body.dark .dwg svg .ln,body.dark .dwg svg .sh{stroke:#b6c0cd}body.dark .dwg svg text{fill:#b6c0cd}
 /* D5 플로팅 독 */
 .dock{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:2px;padding:5px 6px;background:rgba(255,255,255,.96);border:1px solid rgba(15,23,42,.08);border-radius:14px;box-shadow:0 10px 30px rgba(15,23,42,.18);backdrop-filter:blur(8px);transition:padding var(--motion-base)}
 .dock .grip{width:22px;height:30px;display:grid;place-items:center;color:var(--text-3);cursor:grab}
@@ -610,9 +655,11 @@ const NOTES={
  'S90-A1-01':{t:'로고 = 홈(Start Hub)',ch:'로고 클릭 시 항상 Start Hub로 이동.',mo:'즉시 이동.',em:'L0',dev:'Start Hub를 시작 화면으로 쓰지 않는 사용자도 로고로는 언제든 진입 가능.'},
  'S90-A2-01':{t:'Live Brief 위치: 로고 옆 → 메인 메뉴 첫 항목',ch:'로고 옆 강조 버튼(홈처럼 보임)을 메인 메뉴 첫 항목으로 이동. 앞에 상태 점 표시.',mo:'점은 정적. 정상 #44cc16 / 주의 발생 시 #ff9900로 색만 바뀜(루프 애니메이션 없음).',em:'L0 — 상태만 조용히 알림',dev:'점 색은 Live Brief의 주의 건수 > 0 여부로 결정. 메뉴 우측 하단 3px 액센트 바로 현재 섹션 표시.'},
  'S02-C1-01':{t:'탐색 패널 범위 선택',ch:'드롭다운 순서를 태그 → 3D → 도면 → 문서 → 위치 → 내 폴더로 변경. 태그가 기본이자 첫 항목. 선택 항목은 블루 배경 + 체크.',mo:'열기/닫기 즉시(L0), 화살표 180° 회전 120ms.',em:'L0',dev:'기본 범위 = 태그. 마지막 선택 범위는 사용자별로 기억.'},
- 'S02-C3-01':{t:'태그 트리 — 연결 자료 펼치기',ch:'태그 앞 # 표시 삭제. 태그를 펼치면 그 태그를 포함한 문서·도면 목록이 나온다. 카테고리는 작은 회색 라벨(폴더 아이콘 + 이름 + 건수 배지), 파일은 아이콘 + 파일명(13px Medium) 한 줄, 긴 이름은 말줄임. 세로 가이드 라인 1개로 계층 표시. 파일 클릭 시 해당 뷰어(P&ID·문서)가 열리며 닫혀 있던 패널은 자동으로 다시 열림.',mo:'펼침 화살표 90° 회전 120ms.',em:'L0',dev:'태그-문서/도면 매핑 API 사용(현재 사이트 구현). 연결 자료가 없으면 "연결된 자료 없음" 표시.'},
- 'S02-D3-02':{t:'미니맵 — 넓은 현장에서 지금 위치 파악',ch:'넓고 복잡한 3D·도면을 탐색할 때 전체 대비 현재 위치를 보여준다. 표현은 회색 단색(배관·설비 윤곽)만, 강조색 없음. 검은 점 = 지금 보고 있는 지점. 태그를 선택하면 3D가 해당 설비로 줌인하고 미니맵은 그 설비 영역을 블루 점선 박스 + 점(맥박 효과)으로 가리킨다. 미니맵을 클릭하면 그 위치로 시점 이동. 박스는 1겹(맵 영역 = 미니맵 박스).',mo:'줌인 600ms, 클릭 이동 300ms ease-out. 선택 점 맥박 1.4초 반복(선택 중에만).',em:'L1',dev:'평면도는 모델 바운딩 박스 기준 탑뷰(직교 카메라 렌더 또는 배치도 이미지). 태그→좌표는 3D 객체 바운딩 박스 중심. 보이기/숨기기는 툴바 [탐색 도구] 그룹, 사용자별 저장.'},
- 'S02-D3-03':{t:'탐색 도구 배치 — 우측 상단 한 묶음',ch:'미니맵(위)과 뷰 내비게이터(아래)를 3D 영역 우측 상단에 세로로 묶어 배치. 좌상단은 조작 힌트, 하단 중앙은 플로팅 독이 쓰므로 겹치지 않는다. 툴바에 [탐색 도구] 그룹 신설: 미니맵 · 뷰 내비게이터 보기/숨기기 토글.',mo:'토글 즉시 표시/숨김.',em:'L0',dev:'둘 다 끄면 묶음 영역 전체가 사라짐. 패널이 좁아도(최소 140px) 겹치지 않게 우측 정렬.'},
+ 'S02-C3-01':{t:'태그 트리 — 연결 자료 펼치기',ch:'태그 앞 # 표시 삭제. 태그를 펼치면 그 태그의 3D 객체·문서·도면 목록이 나온다(3D 객체 클릭 시 3D 줌인). 카테고리는 작은 회색 라벨(폴더 아이콘 + 이름 + 건수 배지), 파일은 아이콘 + 파일명(13px Medium) 한 줄, 긴 이름은 말줄임. 세로 가이드 라인 1개로 계층 표시. 파일 클릭 시 해당 뷰어(P&ID·문서)가 열리며 닫혀 있던 패널은 자동으로 다시 열림.',mo:'펼침 화살표 90° 회전 120ms.',em:'L0',dev:'태그-문서/도면 매핑 API 사용(현재 사이트 구현). 연결 자료가 없으면 "연결된 자료 없음" 표시.'},
+ 'S02-E-01':{t:'도면 위 3D 렌즈 (선택 영역의 차원 변화)',ch:'P&ID 뷰어 툴바 [3D 렌즈] 스위치를 켜고 도면에서 영역을 드래그하면, 그 안의 태그만 3D로 보여주는 팝업 렌즈가 선택 영역 옆에 뜬다(별도 패널 아님). 선택 밖 설비는 반투명(또는 숨김). 렌즈 안에서 드래그로 회전, [3D 뷰어에서 보기]로 메인 3D로 이동. 도면이 화면을 단독으로 차지할 때 가장 잘 보이며, 아닐 때는 [단독 보기] 안내.',mo:'렌즈 등장 scale .94→1 + 페이드 200ms, 자동 회전(설정).',em:'L2',dev:'설정(⚙): 선택 밖 설비 반투명/숨김, 렌즈 크기 작게·보통·크게, 자동 회전 켜기/끄기 — 사용자별 저장. 영역→태그는 도면 기호 좌표, 태그→3D 객체는 매핑 테이블(3D 객체 목록) 사용. P&ID는 논리 구조이므로 실제 구현은 공간 범위가 아니라 선택 태그 기준으로 3D를 구성.'},
+ 'S02-P-01':{t:'도면 ↔ 3D 매핑',ch:'3D 모델에 해당하는 P&ID 도면(9-36610-LM-105-901)을 P&ID 뷰어에 표시. 도면 기호를 누르면 해당 태그가 선택되고, 3D ⇄ 도면 동기화가 켜져 있으면 3D가 그 설비로 줌인 + 미니맵 표시 + 탐색 트리 선택. 반대로 탐색 트리·3D에서 선택하면 도면 기호가 블루로 강조.',mo:'강조 즉시, 3D 줌인 600ms.',em:'L1',dev:'도면 기호 ↔ 태그 ↔ 3D 객체 매핑 테이블(EPnID 객체화 결과) 사용. 동기화 스위치는 독의 [3D ⇄ 도면].'},
+ 'S02-D3-02':{t:'미니맵 — 넓은 현장에서 지금 위치 파악',ch:'넓고 복잡한 3D·도면을 탐색할 때 전체 대비 현재 위치를 보여준다. 표현은 회색 단색(배관·설비 윤곽)만, 강조색 없음. 주황 점 = 지금 보고 있는 지점. 태그를 선택하면 3D가 해당 설비로 줌인하고 미니맵은 그 설비 영역을 블루 점선 박스 + 점(맥박 효과)으로 가리킨다. 미니맵을 클릭하면 그 위치로 시점 이동. 박스는 1겹(맵 영역 = 미니맵 박스).',mo:'줌인 600ms, 클릭 이동 300ms ease-out. 선택 점 맥박 1.4초 반복(선택 중에만).',em:'L1',dev:'평면도는 모델 바운딩 박스 기준 탑뷰(직교 카메라 렌더 또는 배치도 이미지). 태그→좌표는 3D 객체 바운딩 박스 중심. 보이기/숨기기는 툴바 [탐색 도구] 그룹, 사용자별 저장.'},
+ 'S02-D3-03':{t:'탐색 도구 배치 — 우측 상단 한 묶음',ch:'뷰 내비게이터(왼쪽)와 미니맵(오른쪽)을 3D 영역 우측 상단에 가로로 묶어 배치. 미니맵 우측 상단 ✕로 닫으면 뷰 내비게이터가 오른쪽 끝으로 붙는다. 좌상단은 조작 힌트, 하단 중앙은 플로팅 독이 쓰므로 겹치지 않는다. 툴바에 [탐색 도구] 그룹 신설: 미니맵 · 뷰 내비게이터 보기/숨기기 토글.',mo:'토글 즉시 표시/숨김.',em:'L0',dev:'둘 다 끄면 묶음 영역 전체가 사라짐. 패널이 좁아도(최소 140px) 겹치지 않게 우측 정렬.'},
  'S02-D4-01':{t:'D4 뷰 내비게이터 — 축소형 (항상 노출)',ch:'기존 방식(가운데 등각 버튼 + 주변 6방향 큐브)을 그대로 유지하고 크기만 축소: 전체 약 180×180px → 약 106×110px, 가운데 원 40px, 방향 큐브 20px(터치 영역 26px). 6방향: 위·좌·우·정면·후면·아래. 현재 시점은 블루 테두리로 표시, 마우스를 올리면 시점 이름 툴팁.',mo:'큐브 hover 1.15배 120ms, 카메라 이동 300ms ease-out.',em:'L1',dev:'3D 캔버스 우측 상단, 미니맵 아래(S02-D3-03). 카메라는 현재 거리 유지, 방향만 변경. 툴바·독과 겹치지 않게 배치.'},
  'S02-D5-01':{t:'D5 플로팅 독',ch:'콘텐츠 영역 하단 중앙에 떠 있는 도구 모음. [카메라: P&ID 빠른 열기·선택 객체로 이동·전체 모델·초기 시점] [패널 열기/닫기] [배치: 겹치기·좌우·상하·복합] [3D⇄도면 동기화] [접기]. 그룹 사이 1px 구분선, 아이콘 위 툴팁.',mo:'버튼 hover 120ms, 레이아웃 전환 즉시, 접기 200ms.',em:'L1',dev:'현재 사이트 기능 그대로 + 패널 열기/닫기 그룹 추가. 그립으로 위치 이동(시안에서는 고정).'},
  'S02-D5-02':{t:'뷰어 패널 열기·닫기·크기·배치',ch:'3D·P&ID·그래프·문서 4개 패널을 독에서 켜고 끔(패널 헤더 ✕로도 닫힘, 최소 1개 유지). 패널 사이 경계를 드래그해 크기 조절(최소 140px). 배치 4종: 복합(3D 크게 + 오른쪽 세로 스택, 기본) / 좌우 / 상하 / 겹치기(탭 전환).',mo:'경계 hover 시 블루 2px 핸들 표시.',em:'L0',dev:'패널 헤더 32px · 13px SemiBold · 패널 유형 아이콘(3D 큐브, 도면 지도, 그래프 노드, 문서). 레이아웃·크기·열린 패널은 사용자별 저장 권장.'},
@@ -651,17 +698,18 @@ const PI={
 const PANES=[['3d','3D 뷰어'],['pid','P&ID 뷰어'],['graph','그래프 뷰어'],['doc','문서 뷰어']];
 const XSCOPES=['태그','3D','도면','문서','위치','내 폴더'];
 const XTAGS=[
- ['0-36420-901-HL6D-600','해수 배관 901-HL6D-600',[['설비 통합 매뉴얼 (영문)'],['MVP_설비통합매뉴얼.pdf']],['9-36610-LM-105-901_local.pdf']],
- ['0-36420-902-HL6D-450','해수 배관 902-HL6D-450',[['MVP_설비통합매뉴얼.pdf']],['9-36610-LM-105-901_local.pdf']],
- ['0-36420-903-HL6D-450','해수 배관 903-HL6D-450',[],['9-36610-LM-105-901_local.pdf']],
- ['0-36610-001-HB2D-100','탈염수 배관 001-HB2D-100',[['탈염수 계통 운전 절차서.pdf']],['9-36610-LM-105-901_local.pdf']],
- ['0-36610-002-HB2D-800','탈염수 배관 002-HB2D-800',[],['9-36610-LM-105-901_local.pdf']],
- ['0-36611-M-PP-01A','폐회로 냉각수 펌프 A (CCWP A)',[['CCWP 정비 매뉴얼.pdf'],['펌프 성능 시험 성적서.pdf']],['9-36610-LM-105-901_local.pdf','9-36611-LM-105-902_local.pdf']],
- ['0-36611-M-PP-01B','폐회로 냉각수 펌프 B (CCWP B)',[['CCWP 정비 매뉴얼.pdf']],['9-36611-LM-105-902_local.pdf']],
- ['0-36612-M-HE-01A','폐회로 냉각수 열교환기 A',[['열교환기 설계 데이터시트.pdf']],['9-36612-LM-105-903_local.pdf']],
- ['0-36616-M-TK-01','폐회로 냉각수 헤드탱크 (CCW HEAD TANK)',[],['9-36616-LM-105-904_local.pdf']],
- ['0-36610-CC-MV-001A','차단밸브 0CC/MV/001A',[['밸브 사양서.pdf']],['9-36610-LM-105-901_local.pdf']],
- ['0-36610-J-CC-PT-001','압력 전송기 0CC/PT/001',[['계기 교정 기록.pdf']],['9-36610-LM-105-901_local.pdf']]
+ ['0-36420-901-HL6D-600','해수 배관 901-HL6D-600',['설비 통합 매뉴얼 (영문)','MVP_설비통합매뉴얼.pdf'],['9-36610-LM-105-901_local.pdf'],['LINE-18__run']],
+ ['0-36420-902-HL6D-450','해수 배관 902-HL6D-450',['MVP_설비통합매뉴얼.pdf'],['9-36610-LM-105-901_local.pdf'],['LINE-19__run']],
+ ['0-36420-903-HL6D-450','해수 배관 903-HL6D-450',[],['9-36610-LM-105-901_local.pdf'],['LINE-20__run']],
+ ['0-36610-001-HB2D-100','탈염수 배관 001-HB2D-100',['탈염수 계통 운전 절차서.pdf'],['9-36610-LM-105-901_local.pdf'],['LINE-01__run']],
+ ['0-36610-002-HB2D-800','탈염수 배관 002-HB2D-800',[],['9-36610-LM-105-901_local.pdf'],['LINE-02__run']],
+ ['0-36611-M-PP-01A','폐회로 냉각수 펌프 A (CCWP A)',['CCWP 정비 매뉴얼.pdf','펌프 성능 시험 성적서.pdf'],['9-36610-LM-105-901_local.pdf'],['CCWP_A_body','CCWP_A_motor']],
+ ['0-36611-M-PP-01B','폐회로 냉각수 펌프 B (CCWP B)',['CCWP 정비 매뉴얼.pdf'],['9-36610-LM-105-901_local.pdf'],['CCWP_B_body','CCWP_B_motor']],
+ ['0-36612-M-HE-01A','폐회로 냉각수 열교환기 A',['열교환기 설계 데이터시트.pdf'],['9-36610-LM-105-901_local.pdf'],['HX_A_shell']],
+ ['0-36612-M-HE-01B','폐회로 냉각수 열교환기 B',['열교환기 설계 데이터시트.pdf'],['9-36610-LM-105-901_local.pdf'],['HX_B_shell']],
+ ['0-36616-M-TK-01','폐회로 냉각수 헤드탱크 (CCW HEAD TANK)',[],['9-36610-LM-105-901_local.pdf'],['HEAD_TANK','TANK_SUPPORT']],
+ ['0-36610-CC-MV-001A','차단밸브 0CC/MV/001A',['밸브 사양서.pdf'],['9-36610-LM-105-901_local.pdf'],['VALVE_MV001A']],
+ ['0-36610-J-CC-PT-001','압력 전송기 0CC/PT/001',['계기 교정 기록.pdf'],['9-36610-LM-105-901_local.pdf'],['PT_001']]
 ];
 const ic={
  menu:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>',
@@ -735,17 +783,16 @@ function renderLnav(){
     const tags=['0-36610-001-HB2D-100|탈염수 배관 001','0-36610-002-HB2D-800|탈염수 배관 002','0-36610-003-HB2D-800|탈염수 배관 003','0-36420-901-HL6D-600|해수 배관 901','0-36420-902-HL6D-450|해수 배관 902','P-101A|CCW 펌프 A','P-101B|CCW 펌프 B','HX-301A|CCW 열교환기 A','TK-01|헤드탱크','FV-201|유량 제어밸브'];
     const sc=state.xscope||'태그';
     const sel='<div class="xsel" id="xsel" data-pin="S02-C1-01"><div class="select" id="xselBtn">'+sc+svgI(PI.down,16)+'</div><div class="xsel-menu">'+XSCOPES.map(x=>'<button data-x="'+x+'" class="'+(x===sc?'on':'')+'">'+x+(x===sc?' <span>✓</span>':'')+'</button>').join('')+'</div></div>';
-    const fileRow=(name,kind)=>'<div class="xt-file" title="'+name+'">'+svgI(kind==='pid'?PI.pid:PI.doc,14)+'<span>'+name+'</span></div>';
-    const folder=(label,list,kind)=>list.length?'<div class="xt-cat">'+svgI(PI.fold,14)+'<span>'+label+'</span><em>'+list.length+'</em></div>'+list.map(n=>fileRow(Array.isArray(n)?n[0]:n,kind)).join(''):'';
-    const tree=sc==='태그'?'<div class="xt" data-pin="S02-C3-01">'+XTAGS.map((t,i)=>'<div class="xt-row'+(i===0?' open':'')+'"><span class="cv">'+svgI(PI.chev,14)+'</span><span class="xt-t"><b>'+t[0]+'</b><small>'+t[1]+'</small></span></div><div class="xt-kids">'+folder('문서',t[2],'doc')+folder('도면',t[3],'pid')+((t[2].length||t[3].length)?'':'<div class="xt-none">연결된 문서·도면 없음</div>')+'</div>').join('')+'</div>':'<div class="empty" style="padding:32px 8px"><b style="font-size:14px">'+sc+' 목록</b><p>범위를 바꾸면 해당 목록이 표시돼요.</p></div>';
+    const fileRow=(name,kind,tag)=>'<div class="xt-file" data-kind="'+kind+'" data-tag="'+tag+'" title="'+name+'">'+svgI(kind==='pid'?PI.pid:kind==='3d'?PI['3d']:PI.doc,14)+'<span>'+name+'</span></div>';
+    const folder=(label,list,kind,tag)=>list&&list.length?'<div class="xt-cat">'+svgI(PI.fold,14)+'<span>'+label+'</span><em>'+list.length+'</em></div>'+list.map(n=>fileRow(n,kind,tag)).join(''):'';
+    const tree=sc==='태그'?'<div class="xt" data-pin="S02-C3-01">'+XTAGS.map((t,i)=>'<div class="xt-row'+(i===0?' open':'')+'"><span class="cv">'+svgI(PI.chev,14)+'</span><span class="xt-t"><b>'+t[0]+'</b><small>'+t[1]+'</small></span></div><div class="xt-kids">'+folder('3D 객체',t[4],'3d',t[0])+folder('문서',t[2],'doc',t[0])+folder('도면',t[3],'pid',t[0])+'</div>').join('')+'</div>':'<div class="empty" style="padding:32px 8px"><b style="font-size:14px">'+sc+' 목록</b><p>범위를 바꾸면 해당 목록이 표시돼요.</p></div>';
     body.innerHTML=sel+'<div class="field">⌕ TAG ID · 태그명 검색</div>'+tree;
     const xs=$('#xsel');$('#xselBtn').onclick=e=>{e.stopPropagation();xs.classList.toggle('open')};
     xs.querySelectorAll('.xsel-menu button').forEach(b=>b.onclick=e=>{e.stopPropagation();state.xscope=b.dataset.x;renderLnav()});
     document.addEventListener('click',()=>xs.classList.remove('open'),{once:true});
     body.querySelectorAll('.xt-row').forEach(r=>r.onclick=e=>{if(e.target.closest('.cv')){r.classList.toggle('open');return}
-      body.querySelectorAll('.xt-row').forEach(x=>x.classList.toggle('sel',x===r));r.classList.add('open');const id=r.querySelector('b').textContent;const p=TAG_POS[id];
-      if(p&&$('#c3d')){flyTo(p[0],p[1],true,id);toast('「'+id+'」 위치로 이동했어요. 미니맵에 해당 영역이 표시돼요.')}});
-    body.querySelectorAll('.xt-file').forEach(f=>f.onclick=()=>{body.querySelectorAll('.xt-file').forEach(x=>x.classList.toggle('sel',x===f));const isPid=f.innerHTML.includes('M9 4L3 6');wsOpenPane(isPid?'pid':'doc');toast((isPid?'P&ID 뷰어':'문서 뷰어')+'에 「'+f.textContent+'」를 열었어요.')});
+      r.classList.add('open');selectTag(r.querySelector('b').textContent,'tree')});
+    body.querySelectorAll('.xt-file').forEach(f=>f.onclick=()=>{body.querySelectorAll('.xt-file').forEach(x=>x.classList.toggle('sel',x===f));const k=f.dataset.kind;if(k==='3d'){wsOpenPane('3d');selectTag(f.dataset.tag,'tree');return}wsOpenPane(k);if(k==='pid'){selectTag(f.dataset.tag,'tree')}toast((k==='pid'?'P&ID 뷰어':'문서 뷰어')+'에 「'+f.textContent+'」를 열었어요.')});
   }else if(state.railMode==='insp'){
     title.textContent='인스펙터 패널';
     body.innerHTML='<div class="empty" style="padding:40px 8px"><div class="ic">'+ic.insp+'</div><b style="font-size:15px">선택한 객체가 없어요</b><p>3D나 도면에서 설비를 선택하면 속성이 여기에 표시돼요.</p></div>';
@@ -796,8 +843,8 @@ V.brief=()=>`<div class="lb"><button class="btn disp-btn" id="dispBtn" data-pin=
  <div class="dec"><div class="card"><span class="k">1 · 자재 확인</span><b>CCWP A 베어링 세트 보충</b><p>WO-26-0018 점검에 필요한 베어링 세트는 총 1개 중 1개 예약으로 가용 0개입니다.</p></div><div class="card"><span class="k">2 · 기동 확인</span><b>CCWP B 보호계전기 트립 확인</b><p>TM-26-0049 기동 요청 이후 보호계전기 트립과 운전 피드백 미확인이 기록됐습니다.</p></div><div class="card"><span class="k">3 · 납기 판단</span><b>헤드탱크 통기관 부품 확보</b><p>WO-26-0021 통기관 밸브 점검용 시트 키트 현재고 0개. 발주 예상일과 작업 범위를 확인합니다.</p></div></div></div>`;
 const paneHd=(k,t)=>`<div class="pane-hd"><span class="pi">${svgI(PI[k],15)}</span>${t}<button class="x" data-close="${k}" title="패널 닫기" aria-label="${t} 닫기">${svgI('<path d="M6 6l12 12M18 6L6 18"/>',14)}</button></div>`;
 const miniEmpty=(k,b,t)=>`<div class="mini-empty"><span class="mi">${svgI(PI[k],22)}</span><b>${b}</b><span>${t}</span></div>`;
-V.workspace=()=>`<div class="ws lay-mix" id="ws"><div class="pane" data-pane="3d">${paneHd('3d','3D 뷰어')}<div class="vtb"><div class="tg"><div class="tgb"><button class="tb" title="선택 객체 보기" aria-label="선택 객체 보기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><span class="cnt0">0</span></div><span>선택 객체 보기</span></div><div class="tg"><div class="tgb"><button class="tb" title="확대" aria-label="확대" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="축소" aria-label="축소" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="초기 카메라 시점" aria-label="초기 카메라 시점" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button><button class="tb" title="선택 객체로 이동" aria-label="선택 객체로 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button></div><span>카메라</span></div><div class="tg"><div class="tgb"><button class="tb on" title="궤도 회전" aria-label="궤도 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12a8 4 0 0 0 16 0a8 4 0 0 0-16 0"/></svg></button><button class="tb" title="걷기" aria-label="걷기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 2v4M7 12l3-4 4 1 3 3"/></svg></button><button class="tb" title="핫스팟 이동" aria-label="핫스팟 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></button></div><span>이동 방식</span></div><div class="tg hl" data-pin="S02-D3-01"><div class="tgb"><button class="tb" title="자동 회전" aria-label="자동 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button><button class="tb on" title="그리드 / 현장 기준" aria-label="그리드 / 현장 기준" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button><button class="tb on" title="깊이 안개" aria-label="깊이 안개" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12a4 4 0 0 0 0-8"/><path d="M3 14h18M5 19h14"/></svg></button><button class="tb" title="와이어프레임" aria-label="와이어프레임" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg></button><span class="tbwrap"><button class="tb" title="배경" aria-label="배경" id="bgBtn" aria-haspopup="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 14l5-4 4 3 3-2 6 5"/><circle cx="16" cy="8" r="1.5"/></svg></button><div class="bgpop" id="bgpop"><div class="bp-hd"><b>배경</b><span id="roleTag" class="roletag"></span></div><div class="bp-list" id="bgsel"></div><p class="bp-ft" id="bgnote"></p></div></span></div><span>표시 설정</span></div><div class="tg" data-pin="S02-D3-02"><div class="tgb"><button class="tb" id="mmBtn" title="미니맵 보기/숨기기" aria-label="미니맵 보기/숨기기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><circle cx="12" cy="11" r="2" fill="currentColor"/></svg></button><button class="tb" id="vnBtn" title="뷰 내비게이터 보기/숨기기" aria-label="뷰 내비게이터 보기/숨기기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7l5 2.8v5.4L12 18l-5-2.8V9.8z"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></div><span>탐색 도구</span></div><div class="tg"><div class="tgb"><button class="tb" title="클리핑" aria-label="클리핑" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12a3 3 0 0 0 3 3h12"/><path d="M3 6h12a3 3 0 0 1 3 3v12"/></svg></button><button class="tb" title="거리 측정" aria-label="거리 측정" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></button><button class="tb" title="3D 노트" aria-label="3D 노트" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5"/></svg></button></div><span>클리핑 · 노트</span></div><div class="tg"><div class="tgb"><button class="tb" title="레이어 트리" aria-label="레이어 트리" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></button></div><span>레이어 트리</span></div><div class="tg"><div class="tgb"><button class="tb" title="성능 모니터" aria-label="성능 모니터" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></button></div><span>성능 모니터</span></div><button class="tb collapse" title="접기">⌃</button></div><div class="canvas" id="c3d" style="background-image:url(${IMG3D})"><div class="navstack" id="navstack" data-pin="S02-D3-03"><div class="mmap" id="mmap" title="클릭한 위치로 시점 이동"><span class="mm-lb">미니맵</span><svg id="mmSvg" viewBox="0 0 176 116"></svg></div><div class="vnav" id="vnav" data-pin="S02-D4-01">${vnavHTML()}</div></div><span class="hint">Ctrl+클릭 다중 선택 · Shift+드래그 영역 선택</span></div></div>
- <div class="pane" data-pane="pid">${paneHd('pid','P&ID 뷰어')}${miniEmpty('pid','P&ID 도면 목록','탐색 패널에서 도면을 선택하면 여기에 열려요.')}</div>
+V.workspace=()=>`<div class="ws lay-mix" id="ws"><div class="pane" data-pane="3d">${paneHd('3d','3D 뷰어')}<div class="vtb"><div class="tg"><div class="tgb"><button class="tb" title="선택 객체 보기" aria-label="선택 객체 보기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><span class="cnt0">0</span></div><span>선택 객체 보기</span></div><div class="tg"><div class="tgb"><button class="tb" title="확대" aria-label="확대" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="축소" aria-label="축소" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M20 20l-3.5-3.5"/></svg></button><button class="tb" title="초기 카메라 시점" aria-label="초기 카메라 시점" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button><button class="tb" title="선택 객체로 이동" aria-label="선택 객체로 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button></div><span>카메라</span></div><div class="tg"><div class="tgb"><button class="tb on" title="궤도 회전" aria-label="궤도 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M4 12a8 4 0 0 0 16 0a8 4 0 0 0-16 0"/></svg></button><button class="tb" title="걷기" aria-label="걷기" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 2v4M7 12l3-4 4 1 3 3"/></svg></button><button class="tb" title="핫스팟 이동" aria-label="핫스팟 이동" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></button></div><span>이동 방식</span></div><div class="tg hl" data-pin="S02-D3-01"><div class="tgb"><button class="tb" title="자동 회전" aria-label="자동 회전" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button><button class="tb on" title="그리드 / 현장 기준" aria-label="그리드 / 현장 기준" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button><button class="tb on" title="깊이 안개" aria-label="깊이 안개" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h12a4 4 0 0 0 0-8"/><path d="M3 14h18M5 19h14"/></svg></button><button class="tb" title="와이어프레임" aria-label="와이어프레임" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg></button><span class="tbwrap"><button class="tb" title="배경" aria-label="배경" id="bgBtn" aria-haspopup="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 14l5-4 4 3 3-2 6 5"/><circle cx="16" cy="8" r="1.5"/></svg></button><div class="bgpop" id="bgpop"><div class="bp-hd"><b>배경</b><span id="roleTag" class="roletag"></span></div><div class="bp-list" id="bgsel"></div><p class="bp-ft" id="bgnote"></p></div></span></div><span>표시 설정</span></div><div class="tg" data-pin="S02-D3-02"><div class="tgb"><button class="tb" id="mmBtn" title="미니맵 보기/숨기기" aria-label="미니맵 보기/숨기기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><circle cx="12" cy="11" r="2" fill="currentColor"/></svg></button><button class="tb" id="vnBtn" title="뷰 내비게이터 보기/숨기기" aria-label="뷰 내비게이터 보기/숨기기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7l5 2.8v5.4L12 18l-5-2.8V9.8z"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button></div><span>탐색 도구</span></div><div class="tg"><div class="tgb"><button class="tb" title="클리핑" aria-label="클리핑" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12a3 3 0 0 0 3 3h12"/><path d="M3 6h12a3 3 0 0 1 3 3v12"/></svg></button><button class="tb" title="거리 측정" aria-label="거리 측정" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></button><button class="tb" title="3D 노트" aria-label="3D 노트" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M14 3v5h5"/></svg></button></div><span>클리핑 · 노트</span></div><div class="tg"><div class="tgb"><button class="tb" title="레이어 트리" aria-label="레이어 트리" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></button></div><span>레이어 트리</span></div><div class="tg"><div class="tgb"><button class="tb" title="성능 모니터" aria-label="성능 모니터" ><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></button></div><span>성능 모니터</span></div><button class="tb collapse" title="접기">⌃</button></div><div class="canvas" id="c3d" style="background-image:url(${IMG3D})"><div class="navstack" id="navstack" data-pin="S02-D3-03"><div class="vnav" id="vnav" data-pin="S02-D4-01">${vnavHTML()}</div><div class="mmap" id="mmap" title="클릭한 위치로 시점 이동"><button class="mm-x" id="mmX" title="미니맵 닫기" aria-label="미니맵 닫기">${svgI('<path d="M6 6l12 12M18 6L6 18"/>',11)}</button><svg id="mmSvg" viewBox="0 0 176 116"></svg></div></div><span class="hint">Ctrl+클릭 다중 선택 · Shift+드래그 영역 선택</span></div></div>
+ <div class="pane" data-pane="pid">${paneHd('pid','P&ID 뷰어')}<div class="ptool"><span class="dn">${svgI(PI.pid,13)}9-36610-LM-105-901 · 폐회로 냉각수 계통</span><span class="solo-tip" id="soloTip">도면을 단독으로 보면 렌즈가 넓게 보여요 <button id="soloBtn">단독 보기</button></span><label class="lens-sw" id="lensSw" data-pin="S02-E-01" title="도면에서 영역을 드래그하면 그 부분을 3D로 띄워요">3D 렌즈<span class="sw" id="lensSwI"></span></label><span class="tbwrap"><button class="tb" id="lensCfgBtn" title="3D 렌즈 설정">${svgI('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',14)}</button><div class="lens-cfg" id="lensCfg"><b>3D 렌즈 설정</b><div class="lc-row"><span>선택 밖 설비</span><div class="seg" data-k="dim"><button data-v="ghost">반투명</button><button data-v="hide">숨김</button></div></div><div class="lc-row"><span>렌즈 크기</span><div class="seg" data-k="size"><button data-v="s">작게</button><button data-v="m">보통</button><button data-v="l">크게</button></div></div><div class="lc-row"><span>자동 회전</span><div class="seg" data-k="spin"><button data-v="on">켜기</button><button data-v="off">끄기</button></div></div><p>렌즈를 켠 뒤 도면에서 드래그하면 그 영역의 태그만 3D로 떠요. P&amp;ID는 논리 구조라 도면에서 붙어 있어도 현장에서는 떨어져 있을 수 있어요.</p></div></span></div><div class="dwg" id="dwg" data-pin="S02-P-01">${dwgSVG()}<div class="lasso" id="lasso"></div></div></div>
  <div class="pane" data-pane="graph">${paneHd('graph','그래프 뷰어')}${miniEmpty('graph','영향 그래프','알람에서 그래프를 열면 연결 관계를 확인할 수 있어요.')}</div>
  <div class="pane" data-pane="doc">${paneHd('doc','문서 뷰어')}${miniEmpty('doc','문서 목록','탐색 패널에서 문서를 선택하면 여기에 열려요.')}</div>
  <div class="dock" id="dock" data-pin="S02-D5-01">
@@ -966,6 +1013,7 @@ function wsArrange(){
   ws.querySelectorAll('.wbox[data-key]').forEach(b=>{const g=WS.sz[b.dataset.key];if(!g)return;const kids=[...b.children].filter(c=>!c.classList.contains('split'));if(g.length===kids.length)kids.forEach((c,i)=>c.style.flex=g[i]+' 1 0px')});
   dock.querySelectorAll('[data-pv]').forEach(b=>b.classList.toggle('on',!!WS.vis[b.dataset.pv]));
   dock.querySelectorAll('[data-lay]').forEach(b=>b.classList.toggle('on',b.dataset.lay===WS.lay));
+  const vis1=PANES.filter(p=>WS.vis[p[0]]).length===1;const pp=panes.pid;if(pp)pp.classList.toggle('solo',vis1||(WS.lay==='tabs'&&WS.tab==='pid'));
   setTimeout(placePins,60);
 }
 function vnavHTML(){
@@ -996,16 +1044,17 @@ function initWS(){
 const MM_PIPES=[[[-36,16],[-36,-18],[36,-18],[36,14]],[[-36,-6],[-27,-6]],[[-36,9],[-27,9]],[[-23,-6],[-13,-6],[-13,9],[-23,9]],[[-13,-4],[-8,-4]],[[-13,7],[-8,7]],[[2,-4],[8,-4],[8,7],[2,7]],[[8,2],[8,19],[34,19]],[[8,5],[14,5],[14,-9],[18,-9]],[[8,13],[17,13],[17,6],[19,6]],[[29,-9],[36,-9]],[[29,6],[36,6]]];
 const mmX=x=>88+x*1.95,mmZ=z=>58+z*1.95;
 const MM_EQ=[[-25,-6,8,4.6],[-25,9,8,4.6],[-3,-4,10,4.4],[-3,7,10,4.4],[23.5,-9,10,5],[23.5,6,10,5],[0,-23,12,6]];
-const TAG_POS={'0-36420-901-HL6D-600':[-36,0],'0-36420-902-HL6D-450':[36,0],'0-36420-903-HL6D-450':[0,-18],'0-36610-001-HB2D-100':[-31,-6],'0-36610-002-HB2D-800':[-31,9],'0-36611-M-PP-01A':[-25,-6],'0-36611-M-PP-01B':[-25,9],'0-36612-M-HE-01A':[-3,-4],'0-36616-M-TK-01':[0,-23],'0-36610-CC-MV-001A':[-17,-6],'0-36610-J-CC-PT-001':[5,-4]};
+const TAG_POS={'0-36420-901-HL6D-600':[-36,0],'0-36420-902-HL6D-450':[36,0],'0-36420-903-HL6D-450':[0,-18],'0-36610-001-HB2D-100':[-31,-6],'0-36610-002-HB2D-800':[-31,9],'0-36611-M-PP-01A':[-25,-6],'0-36611-M-PP-01B':[-25,9],'0-36612-M-HE-01A':[-3,-4],'0-36612-M-HE-01B':[-3,7],'0-36616-M-TK-01':[0,-23],'0-36610-CC-MV-001A':[-17,-6],'0-36610-CC-MV-001B':[-17,9],'0-36610-CC-MV-002A':[5,-4],'0-36610-CC-MV-002B':[5,7],'0-36613-M-FL-01A':[23.5,-9],'0-36613-M-FL-01B':[23.5,6],'0-36610-J-CC-PT-001':[8,-4]};
 function initMinimap(){
   const svg=$('#mmSvg'),box=$('#mmap'),vn=$('#vnav'),mb=$('#mmBtn'),vb=$('#vnBtn');if(!svg)return;
   const g='#a3adbb';
   svg.innerHTML=MM_PIPES.map(p=>'<polyline points="'+p.map(q=>mmX(q[0])+','+mmZ(q[1])).join(' ')+'" fill="none" stroke="'+g+'" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>').join('')+
     MM_EQ.map(e=>'<rect x="'+mmX(e[0]-e[2]/2)+'" y="'+mmZ(e[1]-e[3]/2)+'" width="'+e[2]*1.95+'" height="'+e[3]*1.95+'" rx="2" fill="#e3e8ef" stroke="#a3adbb" stroke-width=".8"/>').join('')+
-    '<g id="mmSel" style="display:none"><rect id="mmSelR" rx="3" fill="rgba(67,112,255,.12)" stroke="#4370ff" stroke-width="1.2" stroke-dasharray="3 2"/><circle class="pulse" r="5"/><circle id="mmSelD" r="3.5" fill="#4370ff" stroke="#fff" stroke-width="1.5"/></g><circle id="mmCam" r="3.2" fill="#1f2937" stroke="#fff" stroke-width="1.5"/>';
+    '<g id="mmSel" style="display:none"><rect id="mmSelR" rx="3" fill="rgba(67,112,255,.12)" stroke="#4370ff" stroke-width="1.2" stroke-dasharray="3 2"/><circle class="pulse" r="5"/><circle id="mmSelD" r="3.5" fill="#4370ff" stroke="#fff" stroke-width="1.5"/></g><circle id="mmCam" r="3.6" fill="#ff9900" stroke="#fff" stroke-width="1.5"/>';
   const bind=(btn,el,key)=>{const on=store.get(key,'1')==='1';el.classList.toggle('off',!on);btn.classList.toggle('on',on);
     btn.onclick=e=>{e.stopPropagation();const off=el.classList.toggle('off');btn.classList.toggle('on',!off);store.set(key,off?'0':'1');toast((key==='minimap'?'미니맵':'뷰 내비게이터')+(off?'을 숨겼어요.':'을 표시해요.'))}};
   bind(mb,box,'minimap');bind(vb,vn,'viewnav');
+  $('#mmX').onclick=e=>{e.stopPropagation();box.classList.add('off');mb.classList.remove('on');store.set('minimap','0');toast('미니맵을 닫았어요. 툴바 [탐색 도구]에서 다시 열 수 있어요.')};
   box.onclick=e=>{const r=svg.getBoundingClientRect();const x=((e.clientX-r.left)*176/r.width-88)/1.95,z=((e.clientY-r.top)*116/r.height-58)/1.95;flyTo(x,z,false)};
   const cam=$('#mmCam');
   const upd=()=>{if(!V3||!V3.camera||box.classList.contains('off'))return;const t=V3.controls.target;cam.setAttribute('cx',Math.max(4,Math.min(172,mmX(t.x))));cam.setAttribute('cy',Math.max(4,Math.min(112,mmZ(t.z))))};
@@ -1016,6 +1065,86 @@ function flyTo(x,z,zoom,tag){
   const t=V3.controls.target,f=t.clone(),off=V3.camera.position.clone().sub(t);const toOff=zoom?off.clone().setLength(38):off.clone();const o0=off.clone();const t0=performance.now();
   const st=k=>{const p=Math.min(1,(k-t0)/(zoom?600:300)),e=1-Math.pow(1-p,3);t.set(f.x+(nx-f.x)*e,f.y,f.z+(nz-f.z)*e);const o=o0.clone().lerp(toOff,e);V3.camera.position.copy(t).add(o);if(p<1)requestAnimationFrame(st)};requestAnimationFrame(st);
   const sel=$('#mmSel');if(sel){if(tag){sel.style.display='';const R=$('#mmSelR');R.setAttribute('x',mmX(nx)-11);R.setAttribute('y',mmZ(nz)-8);R.setAttribute('width',22);R.setAttribute('height',16);sel.querySelectorAll('circle').forEach(c=>{c.setAttribute('cx',mmX(nx));c.setAttribute('cy',mmZ(nz))})}else if(zoom===false){}}
+}
+const DWG_SYM=[
+ ['pump',-25,-6,'0-36611-M-PP-01A','CCWP A'],['pump',-25,9,'0-36611-M-PP-01B','CCWP B'],
+ ['hx',-3,-4,'0-36612-M-HE-01A','HX A'],['hx',-3,7,'0-36612-M-HE-01B','HX B'],
+ ['vsl',23.5,-9,'0-36613-M-FL-01A','FL A'],['vsl',23.5,6,'0-36613-M-FL-01B','FL B'],
+ ['tank',0,-23,'0-36616-M-TK-01','HEAD TK'],
+ ['vlv',-17,-6,'0-36610-CC-MV-001A','MV-001A'],['vlv',-17,9,'0-36610-CC-MV-001B','MV-001B'],['vlv',5,-4,'0-36610-CC-MV-002A','MV-002A'],['vlv',5,7,'0-36610-CC-MV-002B','MV-002B'],
+ ['inst',12,-11,'0-36610-J-CC-PT-001','PT 001'],
+ ['line',-36,0,'0-36420-901-HL6D-600','901-HL6D-600'],['line',36,-2,'0-36420-902-HL6D-450','902-HL6D-450'],['line',-14,-18,'0-36420-903-HL6D-450','903-HL6D-450']];
+function dwgSVG(){
+  const ln=MM_PIPES.map(p=>'<polyline class="ln" points="'+p.map(q=>q[0]+','+q[1]).join(' ')+'" fill="none" stroke="#1f2937" stroke-width=".35" stroke-linejoin="round"/>').join('');
+  const T=(x,y,t,a)=>'<text x="'+x+'" y="'+y+'" font-size="1.5" fill="#374151" text-anchor="'+(a||'middle')+'" font-family="Pretendard,sans-serif">'+t+'</text>';
+  const sym=DWG_SYM.map(([k,x,z,tag,lb])=>{let g='';
+    if(k==='pump')g='<circle class="sh" cx="'+x+'" cy="'+z+'" r="2.4" fill="#fff" stroke="#1f2937" stroke-width=".35"/><path class="sh" d="M'+(x-1.2)+','+(z+1.6)+' L'+(x+1.8)+','+z+' L'+(x-1.2)+','+(z-1.6)+'Z" fill="none" stroke="#1f2937" stroke-width=".3"/>'+T(x,z+4.4,lb);
+    if(k==='hx')g='<rect class="sh" x="'+(x-5)+'" y="'+(z-2)+'" width="10" height="4" rx="2" fill="#fff" stroke="#1f2937" stroke-width=".35"/><path class="sh" d="M'+(x-3.5)+','+z+' l1,-1.2 l1,2.4 l1,-2.4 l1,2.4 l1,-2.4 l1,2.4 l1,-1.2" fill="none" stroke="#1f2937" stroke-width=".25"/>'+T(x,z+4.2,lb);
+    if(k==='vsl')g='<rect class="sh" x="'+(x-5)+'" y="'+(z-2.3)+'" width="10" height="4.6" rx="2.3" fill="#fff" stroke="#1f2937" stroke-width=".35"/>'+T(x,z+4.6,lb);
+    if(k==='tank')g='<rect class="sh" x="'+(x-6)+'" y="'+(z-3)+'" width="12" height="6" rx="3" fill="#fff" stroke="#1f2937" stroke-width=".35"/>'+T(x,z+.5,lb);
+    if(k==='vlv')g='<path class="sh" d="M'+(x-1.4)+','+(z-1)+' L'+(x+1.4)+','+(z+1)+' L'+(x+1.4)+','+(z-1)+' L'+(x-1.4)+','+(z+1)+'Z" fill="#fff" stroke="#1f2937" stroke-width=".3"/>'+T(x,z-1.8,lb);
+    if(k==='inst')g='<line class="ln" x1="8" y1="-4" x2="'+x+'" y2="'+(z+1.8)+'" stroke="#1f2937" stroke-width=".25" stroke-dasharray=".8 .5"/><circle class="sh" cx="'+x+'" cy="'+z+'" r="1.8" fill="#fff" stroke="#1f2937" stroke-width=".3"/>'+T(x,z+.5,'PT').replace('font-size="1.5"','font-size="1.2"')+T(x+2.4,z+.5,'001','start');
+    if(k==='line')g='<rect class="sh" x="'+(x-1.4)+'" y="'+(z-1.4)+'" width="2.8" height="2.8" fill="transparent" stroke="none"/>'+(x===-36||x===36?T(x+(x<0?1.2:-1.2),z+.5,lb,x<0?'start':'end'):T(x,z-1.2,lb));
+    return '<g class="sym" data-tag="'+tag+'">'+g+'</g>'}).join('');
+  return '<svg id="dwgSvg" viewBox="-48 -32 96 64" preserveAspectRatio="xMidYMid meet"><rect class="frame" x="-47" y="-31" width="94" height="62" fill="none" stroke="#9aa4b2"/><rect class="frame" x="25" y="23" width="21.5" height="7.5" fill="#fff" stroke="#9aa4b2"/>'+T(35.7,25.6,'9-36610-LM-105-901').replace('font-size="1.5"','font-size="1.3"')+T(35.7,28.3,'폐회로 냉각수 계통 P&amp;ID').replace('font-size="1.5"','font-size="1.1"')+ln+sym+'</svg>';
+}
+function selectTag(id,src){
+  document.querySelectorAll('.xt-row').forEach(r=>{const on=r.querySelector('b').textContent===id;r.classList.toggle('sel',on);if(on&&src!=='tree'){r.classList.add('open');r.scrollIntoView({block:'nearest',behavior:'smooth'})}});
+  const sync=!$('#syncSw')||$('#syncSw').classList.contains('on');
+  if(src==='pid'||sync)document.querySelectorAll('#dwgSvg .sym').forEach(g=>g.classList.toggle('hl',g.dataset.tag===id));
+  const p=TAG_POS[id];
+  if(p&&V3&&(src!=='pid'||sync)){flyTo(p[0],p[1],true,id)}
+  toast('「'+id+'」 선택'+(p&&(src!=='pid'||sync)?' · 3D 줌인, 미니맵에 위치 표시':''));
+}
+const LENS={on:false,dim:'ghost',size:'m',spin:'on',r:null};
+try{Object.assign(LENS,JSON.parse(store.get('lensCfg','{}')),{on:false})}catch(e){}
+function initDwg(){
+  const dwg=$('#dwg');if(!dwg)return;const pane=dwg.closest('.pane'),svg=$('#dwgSvg'),lasso=$('#lasso');
+  svg.querySelectorAll('.sym').forEach(g=>g.onclick=e=>{if(LENS.on)return;e.stopPropagation();selectTag(g.dataset.tag,'pid')});
+  const sw=$('#lensSw');const setOn=v=>{LENS.on=v;sw.classList.toggle('on',v);pane.classList.toggle('lens-on',v);if(!v)closeLens()};
+  sw.onclick=e=>{e.preventDefault();setOn(!LENS.on);toast(LENS.on?'3D 렌즈를 켰어요. 도면에서 보고 싶은 영역을 드래그하세요.':'3D 렌즈를 껐어요.')};
+  $('#soloBtn').onclick=()=>{WS.lay='tabs';WS.tab='pid';wsArrange()};
+  const cfg=$('#lensCfg'),cb=$('#lensCfgBtn');
+  const paint=()=>cfg.querySelectorAll('.seg').forEach(sg=>sg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',LENS[sg.dataset.k]===b.dataset.v)));paint();
+  cfg.querySelectorAll('.seg button').forEach(b=>b.onclick=e=>{e.stopPropagation();LENS[b.parentElement.dataset.k]=b.dataset.v;store.set('lensCfg',JSON.stringify({dim:LENS.dim,size:LENS.size,spin:LENS.spin}));paint();if(LENS.r)openLens(LENS.r)});
+  cb.onclick=e=>{e.stopPropagation();const r=cb.getBoundingClientRect();cfg.style.left=Math.max(8,r.right-250)+'px';cfg.style.top=(r.bottom+6)+'px';cfg.classList.toggle('open')};
+  cfg.onclick=e=>e.stopPropagation();document.addEventListener('click',()=>cfg.classList.remove('open'));
+  dwg.addEventListener('pointerdown',e=>{if(!LENS.on||e.target.closest('.lens'))return;e.preventDefault();const b=dwg.getBoundingClientRect();const x0=e.clientX-b.left,y0=e.clientY-b.top;
+    lasso.style.cssText='display:block;left:'+x0+'px;top:'+y0+'px;width:0;height:0';
+    const mv=ev=>{const x=ev.clientX-b.left,y=ev.clientY-b.top;lasso.style.left=Math.min(x,x0)+'px';lasso.style.top=Math.min(y,y0)+'px';lasso.style.width=Math.abs(x-x0)+'px';lasso.style.height=Math.abs(y-y0)+'px'};
+    const up=ev=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);lasso.style.display='none';
+      const x1=ev.clientX-b.left,y1=ev.clientY-b.top;if(Math.abs(x1-x0)<12||Math.abs(y1-y0)<12)return;
+      const m=svg.getScreenCTM().inverse();const P=(cx,cy)=>{const p=svg.createSVGPoint();p.x=cx;p.y=cy;return p.matrixTransform(m)};
+      const a=P(Math.min(x0,x1)+b.left,Math.min(y0,y1)+b.top),c=P(Math.max(x0,x1)+b.left,Math.max(y0,y1)+b.top);
+      openLens({x0:a.x,z0:a.y,x1:c.x,z1:c.y,px:{l:Math.min(x0,x1),t:Math.min(y0,y1),r:Math.max(x0,x1),b:Math.max(y0,y1)}})};
+    document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up)});
+}
+function closeLens(){const l=$('#lensPop');if(l){if(l._v){cancelAnimationFrame(l._v.raf);l._v.ro.disconnect();l._v.renderer.dispose()}l.remove()}LENS.r=null;document.querySelectorAll('#dwgSvg .sym.inlens').forEach(g=>g.classList.remove('inlens'))}
+function openLens(r){
+  closeLens();LENS.r=r;const dwg=$('#dwg');
+  const tags=DWG_SYM.filter(s=>s[1]>=r.x0&&s[1]<=r.x1&&s[2]>=r.z0&&s[2]<=r.z1);
+  document.querySelectorAll('#dwgSvg .sym').forEach(g=>g.classList.toggle('inlens',tags.some(t=>t[3]===g.dataset.tag)));
+  if(!tags.length){toast('선택한 영역에 태그가 없어요. 설비 기호를 포함해 다시 드래그하세요.');return}
+  const W={s:[300,210],m:[400,280],l:[520,360]}[LENS.size];const db=dwg.getBoundingClientRect();
+  let left=r.px.r+12,top=r.px.t;if(left+W[0]>db.width-8)left=r.px.l-W[0]-12;if(left<8)left=Math.max(8,(db.width-W[0])/2);top=Math.max(8,Math.min(top,db.height-W[1]-8));
+  const el=document.createElement('div');el.className='lens';el.id='lensPop';el.style.cssText='left:'+left+'px;top:'+top+'px;width:'+W[0]+'px;height:'+W[1]+'px';
+  el.innerHTML='<div class="lens-hd">'+svgI(PI['3d'],14)+'3D 렌즈 · 태그 '+tags.length+'개<div class="act"><button id="lensGo">3D 뷰어에서 보기</button><button id="lensX" aria-label="닫기">✕</button></div></div><div class="lens-cv" id="lensCv"><div class="lens-tags">'+tags.map(t=>'<span>'+t[4]+'</span>').join('')+'</div></div>';
+  dwg.appendChild(el);
+  $('#lensX').onclick=e=>{e.stopPropagation();closeLens()};
+  $('#lensGo').onclick=e=>{e.stopPropagation();const cx=(r.x0+r.x1)/2,cz=(r.z0+r.z1)/2;WS.vis['3d']=true;if(WS.lay==='tabs')WS.tab='3d';wsArrange();setTimeout(()=>flyTo(cx,cz,true,tags[0][3]),80)};
+  el.addEventListener('pointerdown',e=>e.stopPropagation());
+  if(typeof THREE==='undefined'){$('#lensCv').insertAdjacentHTML('afterbegin','<div class="mini-empty"><b>3D 미리보기를 불러오지 못했어요</b></div>');return}
+  const host=$('#lensCv');const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;host.prepend(renderer.domElement);
+  const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(35,1,.5,3000);const ctr=new THREE.OrbitControls(cam,renderer.domElement);ctr.enableDamping=true;
+  buildDemoPlant(THREE,scene);
+  const pad=3,bx0=Math.min(r.x0,r.x1)-pad,bx1=Math.max(r.x0,r.x1)+pad,bz0=Math.min(r.z0,r.z1)-pad,bz1=Math.max(r.z0,r.z1)+pad;
+  scene.children.slice().forEach(o=>{if(!o.isMesh)return;const p=o.position;const inside=p.x>=bx0&&p.x<=bx1&&p.z>=bz0&&p.z<=bz1;
+    if(!inside){if(LENS.dim==='hide'){o.visible=false}else{o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.12;o.material.depthWrite=false;o.castShadow=false}}});
+  try{const P=presets(),k=resolveBg().k;applyEnvironment(THREE,scene,adj(P[k]||P.studio),{w:86,d:56})}catch(e){scene.add(new THREE.HemisphereLight(0xffffff,0x8899bb,1))}
+  const cx=(bx0+bx1)/2,cz=(bz0+bz1)/2,sz=Math.max(bx1-bx0,bz1-bz0,12);ctr.target.set(cx,2,cz);cam.position.set(cx-sz*.7,sz*.9+6,cz+sz*1.1);
+  ctr.autoRotate=LENS.spin==='on';ctr.autoRotateSpeed=1.2;
+  const rs=()=>{const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()};const ro=new ResizeObserver(rs);ro.observe(host);rs();
+  const v={renderer,ro,raf:0};el._v=v;const loop=()=>{v.raf=requestAnimationFrame(loop);ctr.update();renderer.render(scene,cam)};loop();
 }
 function setView(v){if(!V3||!V3.camera)return;const t=V3.controls.target,d=V3.camera.position.distanceTo(t);
   const dir={iso:[-.45,.55,.7],top:[0,1,.001],bottom:[0,-1,.001],front:[0,.12,1],back:[0,.12,-1],left:[-1,.12,0],right:[1,.12,0]}[v];
@@ -1122,7 +1251,7 @@ function bindView(){
   const hs=$('#hubSearch');if(hs)hs.onclick=()=>toast('통합 검색 오버레이는 2차 항목(S90-A3-01)이에요.');
   const kp=document.querySelectorAll('.kpi b[data-to]');
   if(kp.length){const first=!sessionStorageSafe('hubSeen');kp.forEach(b=>{const to=+b.dataset.to;if(!first){b.textContent=to.toLocaleString();return}const t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/800);const e=1-Math.pow(1-k,3);b.textContent=Math.round(to*e).toLocaleString();if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
-  init3D();initWS();initMinimap();initStudio();
+  init3D();initWS();initMinimap();initDwg();initStudio();
   const db=$('#dispBtn');if(db)db.onclick=()=>{document.body.classList.toggle('display-mode');db.textContent=document.body.classList.contains('display-mode')?'⤡ 기본 크기':'⤢ 표시 모드';setTimeout(placePins,50)};
 }
 function sessionStorageSafe(k){try{const v=sessionStorage.getItem(k);sessionStorage.setItem(k,'1');return v}catch(e){const v=mem['ss'+k];mem['ss'+k]='1';return v}}
@@ -1155,7 +1284,7 @@ addEventListener('hashchange',route);
 
 /* ---------- Init ---------- */
 setStartPref(startPref(),true);
-const PIN_SCREEN={'S05-H-01':'#/studio/3d-studio','S05-H-02':'#/studio/3d-studio','S05-H-03':'#/studio/3d-studio','S02-D3-01':'#/assets/workspace','S00-1-01':'#/login','S00-H-01':'#/start','S00-H-03':'#/start','S00-H-04':'#/start','S00-H-05':'#/start','S00-H-06':'#/start','S90-T-01':'#/start','S01-D-01':'#/brief','S90-B-02':'#/ops/alarms','S90-Z-05':'#/ops/alarms','S90-B-01':'#/assets/workspace','S90-A4-01':'#/start','S02-C1-01':'#/assets/workspace','S02-C3-01':'#/assets/workspace','S02-D4-01':'#/assets/workspace','S02-D3-02':'#/assets/workspace','S02-D3-03':'#/assets/workspace','S02-D5-01':'#/assets/workspace','S02-D5-02':'#/assets/workspace','S90-A2-02':'#/ops/alarms'};
+const PIN_SCREEN={'S05-H-01':'#/studio/3d-studio','S05-H-02':'#/studio/3d-studio','S05-H-03':'#/studio/3d-studio','S02-D3-01':'#/assets/workspace','S00-1-01':'#/login','S00-H-01':'#/start','S00-H-03':'#/start','S00-H-04':'#/start','S00-H-05':'#/start','S00-H-06':'#/start','S90-T-01':'#/start','S01-D-01':'#/brief','S90-B-02':'#/ops/alarms','S90-Z-05':'#/ops/alarms','S90-B-01':'#/assets/workspace','S90-A4-01':'#/start','S02-C1-01':'#/assets/workspace','S02-C3-01':'#/assets/workspace','S02-D4-01':'#/assets/workspace','S02-D3-02':'#/assets/workspace','S02-E-01':'#/assets/workspace','S02-P-01':'#/assets/workspace','S02-D3-03':'#/assets/workspace','S02-D5-01':'#/assets/workspace','S02-D5-02':'#/assets/workspace','S90-A2-02':'#/ops/alarms'};
 let deep=(location.hash.match(/[?&]pin=([\w-]+)/)||[])[1];
 const pm=location.hash.match(/^#pin-([\w-]+)$/);
 if(pm){deep=pm[1];const scr=PIN_SCREEN[deep]||'#/start';history.replaceState(null,'',scr==='#/login'?'#/start':scr);if(scr==='#/login')showLogin()}
