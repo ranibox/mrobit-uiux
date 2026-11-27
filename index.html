@@ -260,6 +260,13 @@ body.dark .mmap{background:rgba(23,33,48,.9);border-color:var(--line)}
 .lens-dwg .ln,.lens-dwg .sh{vector-effect:non-scaling-stroke;stroke-width:1.2px}
 .lens-dwg .sym.hl .sh{stroke:#4370ff;stroke-width:2px;fill:rgba(67,112,255,.12)}.lens-dwg .sym.hl text{fill:#4370ff;font-weight:700}
 .canvas.lens3d{cursor:crosshair}
+.zbtns{position:absolute;right:8px;bottom:8px;z-index:4;display:flex;flex-direction:column;background:rgba(255,255,255,.95);border:1px solid var(--line-soft);border-radius:8px;box-shadow:0 2px 8px rgba(15,23,42,.12);overflow:hidden}
+.zbtns button{width:26px;height:24px;font-size:14px;font-weight:700;color:var(--text-2);display:grid;place-items:center}
+.zbtns button+button{border-top:1px solid var(--line-soft)}
+.zbtns button:hover{background:#eef3fb;color:var(--accent)}
+.dwg>.zbtns{bottom:12px;right:12px}
+.lens-dwg{overflow:hidden}
+body.dark .zbtns{background:rgba(23,33,48,.95)}
 .canvas .lasso{z-index:5}
 body.dark .lf-chips span,body.dark .ll-grp button{background:#223047}body.dark .lens-dwg{background:#141d2a}
 .mm-x{position:absolute;right:4px;top:4px;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;color:var(--text-3);background:rgba(255,255,255,.8);z-index:2}
@@ -685,8 +692,8 @@ const NOTES={
  'S90-A2-01':{t:'Live Brief 위치: 로고 옆 → 메인 메뉴 첫 항목',ch:'로고 옆 강조 버튼(홈처럼 보임)을 메인 메뉴 첫 항목으로 이동. 앞에 상태 점 표시.',mo:'점은 정적. 정상 #44cc16 / 주의 발생 시 #ff9900로 색만 바뀜(루프 애니메이션 없음).',em:'L0 — 상태만 조용히 알림',dev:'점 색은 Live Brief의 주의 건수 > 0 여부로 결정. 메뉴 우측 하단 3px 액센트 바로 현재 섹션 표시.'},
  'S02-C1-01':{t:'탐색 패널 범위 선택',ch:'드롭다운 순서를 태그 → 3D → 도면 → 문서 → 위치 → 내 폴더로 변경. 태그가 기본이자 첫 항목. 선택 항목은 블루 배경 + 체크.',mo:'열기/닫기 즉시(L0), 화살표 180° 회전 120ms.',em:'L0',dev:'기본 범위 = 태그. 마지막 선택 범위는 사용자별로 기억.'},
  'S02-C3-01':{t:'태그 트리 — 연결 자료 펼치기',ch:'태그 앞 # 표시 삭제. 태그를 펼치면 그 태그의 3D 객체·문서·도면 목록이 나온다(3D 객체 클릭 시 3D 줌인). 카테고리는 작은 회색 라벨(폴더 아이콘 + 이름 + 건수 배지), 파일은 아이콘 + 파일명(13px Medium) 한 줄, 긴 이름은 말줄임. 세로 가이드 라인 1개로 계층 표시. 파일 클릭 시 해당 뷰어(P&ID·문서)가 열리며 닫혀 있던 패널은 자동으로 다시 열림.',mo:'펼침 화살표 90° 회전 120ms.',em:'L0',dev:'태그-문서/도면 매핑 API 사용(현재 사이트 구현). 연결 자료가 없으면 "연결된 자료 없음" 표시.'},
- 'S02-E-01':{t:'도면 위 3D 렌즈 (선택 영역의 차원 변화)',ch:'P&ID 뷰어 툴바 [3D 렌즈] 스위치를 켜고 도면에서 영역을 드래그하면, 그 안의 태그만 3D로 보여주는 팝업 렌즈가 선택 영역 옆에 뜬다(별도 패널 아님). 선택 밖 설비는 반투명(또는 숨김). 렌즈 안에서 드래그로 회전, [3D 뷰어에서 보기]로 메인 3D로 이동, ✕ 또는 스위치 끄기로 닫기. 렌즈 이름은 "띄우는 결과물" 기준(도면에서 3D를 띄우면 3D 렌즈, 3D에서 도면을 띄우면 도면 렌즈). 도면이 화면을 단독으로 차지할 때 가장 잘 보이며, 아닐 때는 [단독 보기] 안내.',mo:'렌즈 등장 scale .94→1 + 페이드 200ms, 자동 회전(설정).',em:'L2',dev:'설정(⚙): 선택 밖 설비 반투명/숨김, 렌즈 크기 작게·보통·크게, 자동 회전 켜기/끄기 — 사용자별 저장. 영역→태그는 도면 기호 좌표, 태그→3D 객체는 매핑 테이블(3D 객체 목록) 사용. P&ID는 논리 구조이므로 실제 구현은 공간 범위가 아니라 선택 태그 기준으로 3D를 구성.'},
- 'S02-E-02':{t:'3D 위 도면 렌즈 (3D → 도면)',ch:'3D 뷰어 툴바 아래 타이틀 바(모델명 · 계통)의 [도면 렌즈] 스위치를 켜고(⚙ 설정은 3D 렌즈와 공통, P&ID 뷰어와 같은 형태) 3D에서 영역을 드래그하면, 화면에 보이는 그 영역의 태그를 기준으로 해당 P&ID 부분을 팝업 렌즈로 띄운다. 선택 태그 기호는 블루 강조, 나머지는 흐리게(설정: 숨김). [도면 뷰어에서 보기]로 P&ID 뷰어에 강조 상태로 이동. 렌즈가 켜진 동안 3D 회전은 잠시 멈춤(드래그 = 영역 선택).',mo:'렌즈 등장 200ms. 버튼 다시 누르면 렌즈 모드 해제.',em:'L2',dev:'태그 기준: 3D 객체 → 태그 → 도면 기호 매핑. 여러 도면에 걸치면 도면별 탭(2차). 렌즈 설정(⚙)은 3D 렌즈와 공유.'},
+ 'S02-E-01':{t:'도면 위 3D 렌즈 (선택 영역의 차원 변화)',ch:'P&ID 뷰어 툴바 [3D 렌즈] 스위치를 켜고 도면에서 영역을 드래그하면, 그 안의 태그만 3D로 보여주는 팝업 렌즈가 선택 영역 옆에 뜬다(별도 패널 아님). 선택 밖 설비는 반투명(또는 숨김). 렌즈가 켜져 있어도 도면 휠 확대/축소·우클릭 드래그 이동 가능. 렌즈 안에서 드래그로 회전, [3D 뷰어에서 보기]로 메인 3D로 이동, ✕ 또는 스위치 끄기로 닫기. 렌즈 이름은 "띄우는 결과물" 기준(도면에서 3D를 띄우면 3D 렌즈, 3D에서 도면을 띄우면 도면 렌즈). 도면이 화면을 단독으로 차지할 때 가장 잘 보이며, 아닐 때는 [단독 보기] 안내.',mo:'렌즈 등장 scale .94→1 + 페이드 200ms, 자동 회전(설정).',em:'L2',dev:'설정(⚙): 선택 밖 설비 반투명/숨김, 렌즈 크기 작게·보통·크게, 자동 회전 켜기/끄기 — 사용자별 저장. 영역→태그는 도면 기호 좌표, 태그→3D 객체는 매핑 테이블(3D 객체 목록) 사용. P&ID는 논리 구조이므로 실제 구현은 공간 범위가 아니라 선택 태그 기준으로 3D를 구성.'},
+ 'S02-E-02':{t:'3D 위 도면 렌즈 (3D → 도면)',ch:'3D 뷰어 툴바 아래 타이틀 바(모델명 · 계통)의 [도면 렌즈] 스위치를 켜고(⚙ 설정은 3D 렌즈와 공통, P&ID 뷰어와 같은 형태) 3D에서 영역을 드래그하면, 화면에 보이는 그 영역의 태그를 기준으로 해당 P&ID 부분을 팝업 렌즈로 띄운다. 선택 태그 기호는 블루 강조, 나머지는 흐리게(설정: 숨김). [도면 뷰어에서 보기]로 P&ID 뷰어에 강조 상태로 이동. 렌즈가 켜진 동안 왼쪽 드래그만 영역 선택으로 바뀌고, 휠 확대/축소·우클릭 드래그 이동은 그대로 동작. 팝업 도면도 휠·드래그·[+ − ⤢] 버튼으로 확대/축소/이동.',mo:'렌즈 등장 200ms. 버튼 다시 누르면 렌즈 모드 해제.',em:'L2',dev:'태그 기준: 3D 객체 → 태그 → 도면 기호 매핑. 여러 도면에 걸치면 도면별 탭(2차). 렌즈 설정(⚙)은 3D 렌즈와 공유.'},
  'S02-E-03':{t:'렌즈 태그 목록 — 많을 때',ch:'렌즈 하단 바: [유형 요약(설비 4 · 밸브 2)] + [칩 최대 3개 + "+N"] + [목록]. +N 또는 목록을 누르면 렌즈 오른쪽에 태그 목록 패널(검색 · 유형 필터 · 스크롤)이 열린다. 목록에서 태그를 누르면 트리·3D·도면이 함께 선택.',mo:'목록 패널 즉시 표시.',em:'L0',dev:'칩은 화면 폭과 관계없이 최대 3개. 100개 이상은 가상 스크롤. 유형은 태그 분류 코드 기준.'},
  'S02-P-01':{t:'도면 ↔ 3D 매핑',ch:'3D 모델에 해당하는 P&ID 도면(9-36610-LM-105-901)을 P&ID 뷰어에 표시. 도면 기호를 누르면 해당 태그가 선택되고, 3D ⇄ 도면 동기화가 켜져 있으면 3D가 그 설비로 줌인 + 미니맵 표시 + 탐색 트리 선택. 반대로 탐색 트리·3D에서 선택하면 도면 기호가 블루로 강조.',mo:'강조 즉시, 3D 줌인 600ms.',em:'L1',dev:'도면 기호 ↔ 태그 ↔ 3D 객체 매핑 테이블(EPnID 객체화 결과) 사용. 동기화 스위치는 독의 [3D ⇄ 도면].'},
  'S02-D3-02':{t:'미니맵 — 넓은 현장에서 지금 위치 파악',ch:'넓고 복잡한 3D·도면을 탐색할 때 전체 대비 현재 위치를 보여준다. 표현은 회색 단색(배관·설비 윤곽)만, 강조색 없음. 주황 점 = 지금 보고 있는 지점. 태그를 선택하면 3D가 해당 설비로 줌인하고 미니맵은 그 설비 영역을 블루 점선 박스 + 점(맥박 효과)으로 가리킨다. 미니맵을 클릭하면 그 위치로 시점 이동. 박스는 1겹(맵 영역 = 미니맵 박스).',mo:'줌인 600ms, 클릭 이동 300ms ease-out. 선택 점 맥박 1.4초 반복(선택 중에만).',em:'L1',dev:'평면도는 모델 바운딩 박스 기준 탑뷰(직교 카메라 렌더 또는 배치도 이미지). 태그→좌표는 3D 객체 바운딩 박스 중심. 보이기/숨기기는 툴바 [탐색 도구] 그룹, 사용자별 저장.'},
@@ -1130,11 +1137,27 @@ function selectTag(id,src){
 }
 const LENS={on:false,dim:'ghost',size:'m',spin:'on',r:null};
 try{Object.assign(LENS,JSON.parse(store.get('lensCfg','{}')),{on:false})}catch(e){}
+function svgZoom(svg,opt){
+  opt=opt||{};const vb0=svg.getAttribute('viewBox').split(/\s+/).map(Number);let vb=vb0.slice();
+  const apply=()=>svg.setAttribute('viewBox',vb.join(' '));
+  const zoomAt=(k,cx,cy)=>{const r=svg.getBoundingClientRect();const p=svg.createSVGPoint();p.x=cx;p.y=cy;const w=p.matrixTransform(svg.getScreenCTM().inverse());
+    const nw=Math.max(vb0[2]/12,Math.min(vb0[2]*1.5,vb[2]*k)),nh=nw*vb[3]/vb[2];vb=[w.x-(w.x-vb[0])*nw/vb[2],w.y-(w.y-vb[1])*nh/vb[3],nw,nh];apply()};
+  svg.addEventListener('wheel',e=>{e.preventDefault();e.stopPropagation();zoomAt(e.deltaY>0?1.15:1/1.15,e.clientX,e.clientY)},{passive:false});
+  svg.addEventListener('pointerdown',e=>{const btns=opt.panButtons?opt.panButtons():[0,1,2];if(!btns.includes(e.button))return;e.preventDefault();e.stopPropagation();
+    const r=svg.getBoundingClientRect(),sx=e.clientX,sy=e.clientY,v0=vb.slice(),sc=Math.max(vb[2]/r.width,vb[3]/r.height);svg.style.cursor='grabbing';
+    const mv=ev=>{vb=[v0[0]-(ev.clientX-sx)*sc,v0[1]-(ev.clientY-sy)*sc,v0[2],v0[3]];apply()};const up=()=>{svg.style.cursor='';document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up)};
+    document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up)});
+  svg.addEventListener('contextmenu',e=>e.preventDefault());
+  return {zoom:k=>{const r=svg.getBoundingClientRect();zoomAt(k,r.left+r.width/2,r.top+r.height/2)},fit:()=>{vb=vb0.slice();apply()}};
+}
+function zoomBtns(z){const d=document.createElement('div');d.className='zbtns';d.innerHTML='<button data-z="in" title="확대">+</button><button data-z="out" title="축소">−</button><button data-z="fit" title="전체 맞춤">⤢</button>';
+  d.querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();const k=b.dataset.z;k==='in'?z.zoom(1/1.3):k==='out'?z.zoom(1.3):z.fit()});['pointerdown','click'].forEach(ev=>d.addEventListener(ev,e=>e.stopPropagation()));return d}
 function initDwg(){
   const dwg=$('#dwg');if(!dwg)return;const pane=dwg.closest('.pane'),svg=$('#dwgSvg'),lasso=$('#lasso');
   svg.querySelectorAll('.sym').forEach(g=>g.onclick=e=>{if(LENS.on)return;e.stopPropagation();selectTag(g.dataset.tag,'pid')});
+  const zm=svgZoom(svg,{panButtons:()=>LENS.on?[1,2]:[1,2]});dwg.appendChild(zoomBtns(zm));
   const sw=$('#lensSw');const setOn=v=>{LENS.on=v;sw.classList.toggle('on',v);pane.classList.toggle('lens-on',v);if(!v)closeLens()};
-  sw.onclick=e=>{e.preventDefault();setOn(!LENS.on);toast(LENS.on?'3D 렌즈를 켰어요. 도면에서 보고 싶은 영역을 드래그하세요.':'3D 렌즈를 껐어요.')};
+  sw.onclick=e=>{e.preventDefault();setOn(!LENS.on);toast(LENS.on?'3D 렌즈를 켰어요. 드래그 = 영역 선택, 휠 = 확대/축소, 우클릭 드래그 = 이동.':'3D 렌즈를 껐어요.')};
   $('#soloBtn').onclick=()=>{WS.lay='tabs';WS.tab='pid';wsArrange()};
   const cfg=$('#lensCfg'),cb=$('#lensCfgBtn');document.body.appendChild(cfg);
   const paint=()=>cfg.querySelectorAll('.seg').forEach(sg=>sg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',LENS[sg.dataset.k]===b.dataset.v)));paint();
@@ -1142,7 +1165,7 @@ function initDwg(){
   window.openLensCfg=btn=>{const r=btn.getBoundingClientRect();cfg.style.left=Math.max(8,r.right-250)+'px';cfg.style.top=(r.bottom+6)+'px';cfg.classList.toggle('open')};
   cb.onclick=e=>{e.stopPropagation();openLensCfg(cb)};
   cfg.onclick=e=>e.stopPropagation();document.addEventListener('click',()=>cfg.classList.remove('open'));
-  dwg.addEventListener('pointerdown',e=>{if(!LENS.on||e.target.closest('.lens'))return;e.preventDefault();const b=dwg.getBoundingClientRect();const x0=e.clientX-b.left,y0=e.clientY-b.top;
+  dwg.addEventListener('pointerdown',e=>{if(!LENS.on||e.button!==0||e.target.closest('.lens,.zbtns'))return;e.preventDefault();const b=dwg.getBoundingClientRect();const x0=e.clientX-b.left,y0=e.clientY-b.top;
     lasso.style.cssText='display:block;left:'+x0+'px;top:'+y0+'px;width:0;height:0';
     const mv=ev=>{const x=ev.clientX-b.left,y=ev.clientY-b.top;lasso.style.left=Math.min(x,x0)+'px';lasso.style.top=Math.min(y,y0)+'px';lasso.style.width=Math.abs(x-x0)+'px';lasso.style.height=Math.abs(y-y0)+'px'};
     const up=ev=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);lasso.style.display='none';
@@ -1171,9 +1194,9 @@ const LENS3={on:false};
 function init3DLens(){
   const btn=$('#lens3Sw'),cv=$('#c3d'),lasso=$('#lasso3'),hint=$('#hint3');if(!btn||!cv)return;const hint0=hint.textContent;const pane3=cv.closest('.pane');
   $('#lens3Cfg').onclick=e=>{e.stopPropagation();openLensCfg($('#lens3Cfg'))};$('#solo3Btn').onclick=()=>{WS.lay='tabs';WS.tab='3d';wsArrange()};
-  const set=v=>{LENS3.on=v;btn.classList.toggle('on',v);pane3.classList.toggle('lens-on',v);cv.classList.toggle('lens3d',v);if(V3)V3.controls.enabled=!v;hint.textContent=v?'도면 렌즈: 보고 싶은 영역을 드래그하세요':hint0;if(!v)closeLens()};
+  const set=v=>{LENS3.on=v;btn.classList.toggle('on',v);pane3.classList.toggle('lens-on',v);cv.classList.toggle('lens3d',v);if(V3){V3.controls.enableRotate=!v;V3.controls.enabled=true}hint.textContent=v?'도면 렌즈: 드래그 = 영역 선택 · 휠 = 확대/축소 · 우클릭 드래그 = 이동':hint0;if(!v)closeLens()};
   btn.onclick=e=>{e.preventDefault();e.stopPropagation();set(!LENS3.on);toast(LENS3.on?'도면 렌즈를 켰어요. 3D에서 보고 싶은 영역을 드래그하세요.':'도면 렌즈를 껐어요.')};
-  cv.addEventListener('pointerdown',e=>{if(!LENS3.on||e.target.closest('.lens,.navstack,.vnav,.mmap'))return;e.preventDefault();const b=cv.getBoundingClientRect();const x0=e.clientX-b.left,y0=e.clientY-b.top;
+  cv.addEventListener('pointerdown',e=>{if(!LENS3.on||e.button!==0||e.target.closest('.lens,.navstack,.vnav,.mmap'))return;e.preventDefault();const b=cv.getBoundingClientRect();const x0=e.clientX-b.left,y0=e.clientY-b.top;
     lasso.style.cssText='display:block;left:'+x0+'px;top:'+y0+'px;width:0;height:0';
     const mv=ev=>{const x=ev.clientX-b.left,y=ev.clientY-b.top;lasso.style.left=Math.min(x,x0)+'px';lasso.style.top=Math.min(y,y0)+'px';lasso.style.width=Math.abs(x-x0)+'px';lasso.style.height=Math.abs(y-y0)+'px'};
     const up=ev=>{document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);lasso.style.display='none';const x1=ev.clientX-b.left,y1=ev.clientY-b.top;if(Math.abs(x1-x0)<12||Math.abs(y1-y0)<12)return;
@@ -1190,6 +1213,7 @@ function openDwgLens(tags,px,host){
   const el=document.createElement('div');el.className='lens';el.id='lensPop';el.style.cssText='left:'+left+'px;top:'+top+'px;width:'+W[0]+'px;height:'+W[1]+'px';
   el.innerHTML='<div class="lens-hd">'+svgI(PI.pid,14)+'도면 렌즈 · 태그 '+tags.length+'개<div class="act"><button id="lensGo">도면 뷰어에서 보기</button><button id="lensX" aria-label="닫기">✕</button></div></div><div class="lens-body"><div class="lens-dwg">'+dwgSVG().replace('id="dwgSvg"','').replace('viewBox="-48 -32 96 64"','viewBox="'+x0+' '+z0+' '+(x1-x0)+' '+(z1-z0)+'"')+'</div>'+lensListHTML(tags)+'</div>'+lensFtHTML(tags);
   host.appendChild(el);bindLensChrome(el,tags);
+  const lsvg=el.querySelector('.lens-dwg svg');const lz=svgZoom(lsvg);el.querySelector('.lens-dwg').appendChild(zoomBtns(lz));
   const set=new Set(tags.map(t=>t[3]));el.querySelectorAll('.lens-dwg .sym').forEach(g=>{if(set.has(g.dataset.tag))g.classList.add('hl');else g.classList.add(LENS.dim==='hide'?'gone':'dim')});
   $('#lensX').onclick=e=>{e.stopPropagation();closeLens()};
   $('#lensGo').onclick=e=>{e.stopPropagation();closeLens();WS.vis.pid=true;if(WS.lay==='tabs')WS.tab='pid';wsArrange();document.querySelectorAll('#dwgSvg .sym').forEach(g=>g.classList.toggle('hl',set.has(g.dataset.tag)));toast('P&ID 뷰어에서 태그 '+tags.length+'개를 강조했어요.')};
