@@ -591,19 +591,19 @@ body.dark .hub h1{background-image:linear-gradient(100deg,var(--tc) 0,var(--tc) 
 .hsearch::before{content:"";position:absolute;left:8%;right:8%;bottom:-8px;height:22px;border-radius:999px;background:linear-gradient(90deg,rgba(67,120,240,.66),rgba(50,140,230,.6) 50%,rgba(28,165,190,.5) 78%,rgba(30,170,140,.32));filter:blur(14px);opacity:.55;z-index:-1;pointer-events:none;transition:opacity var(--motion-base) var(--ease)}
 .hsearch:hover{border-color:#b9c7e6}.hsearch:hover::before{opacity:.7}
 /* S00-H-09 search: 1px blue + outer glow (bottom-weighted) — 시안 A/B/C */
-.hsearch{border:1px solid #4370ff;transition:box-shadow .35s var(--ease),border-color .35s var(--ease),transform .35s var(--ease)}
+.hsearch{border:1px solid rgba(67,112,255,.45);transition:box-shadow .35s var(--ease),border-color .35s var(--ease),transform .35s var(--ease)}
 .hsearch::before{display:none}
 /* A 소프트 리프트: 얇은 링 + 아래로 떨어지는 부드러운 블루 그림자 */
-.hs-A .hsearch{box-shadow:0 0 0 4px rgba(67,112,255,.07),0 2px 6px rgba(67,112,255,.12),0 14px 30px -10px rgba(67,112,255,.42)}
-.hs-A .hsearch:hover{box-shadow:0 0 0 5px rgba(67,112,255,.1),0 3px 8px rgba(67,112,255,.14),0 18px 36px -10px rgba(67,112,255,.5)}
+.hsearch,.hs-A .hsearch{box-shadow:0 0 0 4px rgba(67,112,255,.07),0 2px 6px rgba(67,112,255,.12),0 14px 30px -10px rgba(67,112,255,.42)}
+.hsearch:hover,.hs-A .hsearch:hover{border-color:rgba(67,112,255,.65);box-shadow:0 0 0 5px rgba(67,112,255,.1),0 3px 8px rgba(67,112,255,.14),0 18px 36px -10px rgba(67,112,255,.5)}
 /* B 아우라: 사방으로 번지는 빛 + 아래쪽에 더 짙게 */
 .hs-B .hsearch{box-shadow:0 0 0 6px rgba(67,112,255,.06),0 0 30px rgba(67,112,255,.24),0 22px 48px -10px rgba(67,112,255,.5),0 40px 70px -28px rgba(28,160,190,.4)}
 .hs-B .hsearch:hover{box-shadow:0 0 0 7px rgba(67,112,255,.08),0 0 38px rgba(67,112,255,.3),0 26px 54px -10px rgba(67,112,255,.56),0 46px 80px -28px rgba(28,160,190,.45)}
 /* C 플로팅: 위쪽 하이라이트 + 다층 그림자로 떠 있는 판 */
 .hs-C .hsearch{background:linear-gradient(180deg,#fff 0,#fbfcff 60%,#f3f6ff 100%);box-shadow:inset 0 1px 0 #fff,inset 0 -2px 6px rgba(67,112,255,.06),0 1px 2px rgba(15,23,42,.1),0 10px 18px -6px rgba(30,60,160,.28),0 32px 52px -16px rgba(43,80,200,.55)}
 .hs-C .hsearch{transform:translateY(-2px)}.hs-C .hsearch:hover{transform:translateY(-3px);box-shadow:inset 0 1px 0 #fff,inset 0 -2px 6px rgba(67,112,255,.08),0 2px 4px rgba(15,23,42,.08),0 12px 20px -6px rgba(30,60,160,.26),0 32px 52px -18px rgba(67,112,255,.52)}
-body.dark .hsearch{border-color:#6f96ff}
-body.dark.hs-A .hsearch{box-shadow:0 0 0 4px rgba(111,150,255,.1),0 14px 30px -10px rgba(111,150,255,.45)}
+body.dark .hsearch{border-color:rgba(111,150,255,.5)}
+body.dark .hsearch,body.dark.hs-A .hsearch{box-shadow:0 0 0 4px rgba(111,150,255,.1),0 14px 30px -10px rgba(111,150,255,.45)}
 body.dark.hs-B .hsearch{box-shadow:0 0 0 6px rgba(111,150,255,.08),0 0 32px rgba(111,150,255,.32),0 16px 36px -8px rgba(111,150,255,.4),0 30px 60px -24px rgba(69,201,168,.3)}
 body.dark.hs-C .hsearch{background:linear-gradient(180deg,#1f2b40,#18222f);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 16px -6px rgba(0,0,0,.5),0 26px 44px -18px rgba(111,150,255,.45)}
 .hsel{position:absolute;right:0;top:calc(100% + 10px);display:flex;align-items:center;gap:6px;font-size:var(--fs-caption);color:var(--text-3)}
@@ -1082,9 +1082,9 @@ function thumbDwg(vb,mark){let s=dwgSVG().replace(' id="dwgSvg"','').replace('vi
   return s}
 V.start=()=>{
   return `<div class="hubfx" id="hubfx" data-pin="S00-H-07"><canvas id="hubfxC"></canvas></div><div class="hub" data-pin="S00-H-01">
-  <div class="hub-top"><h1 data-pin="S00-H-08" class="${window.__hubIntroDone?'':'intro'}">Start Hub</h1>
+  <div class="hub-top"><div class="fxsel" title="시안 비교용 임시 스위치"><span class="tmp">시안</span>리본 흐림<span class="seg">${['A','B','C'].map(k=>'<button data-rb="'+k+'" class="'+(k===store.get('ribBlur','B')?'on':'')+'" title="'+{A:'살짝 2px',B:'중간 5px',C:'부드럽게 10px'}[k]+'">'+k+'</button>').join('')}</span></div><h1 data-pin="S00-H-08" class="${window.__hubIntroDone?'':'intro'}">Start Hub</h1>
   <div class="switch ${startPref()==='hub'?'on':''}" id="hubSwitch" data-pin="S00-H-03">로그인 시 Start Hub 표시<span class="sw"></span></div></div>
-  <div class="hswrap"><div class="hsel" title="시안 비교용 임시 스위치"><span class="tmp">시안</span>검색창<span class="seg">${['A','B','C'].map(k=>'<button data-hs="'+k+'" class="'+(k===store.get('hsVar','B')?'on':'')+'" title="'+{A:'소프트 리프트',B:'아우라',C:'플로팅'}[k]+'">'+k+'</button>').join('')}</span></div><div class="hsearch" id="hubSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>태그 · 설비 · 도면 · 문서 검색<kbd>Ctrl K</kbd><span class="mic" title="음성 검색(예정)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div></div>
+  <div class="hswrap"><div class="hsearch" id="hubSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>태그 · 설비 · 도면 · 문서 검색<kbd>Ctrl K</kbd><span class="mic" title="음성 검색(예정)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div></div>
   <div class="chips"><small>최근</small><button class="chip">0-36610-001-HB2D-100</button><button class="chip">CCWP B</button><button class="chip">9-36610-LM-105-901</button></div>
   <section class="hsec" data-pin="S00-H-05"><div class="hsec-hd"><h2>연결 현황</h2><span class="meta"><span class="live-dot"></span>BITHUB 동기화 · 14:30</span></div>
   <div class="kpis">
@@ -1702,7 +1702,8 @@ function hubfxInit(){
   const size=()=>{const r=wrap.getBoundingClientRect();HUBFX.dpr=Math.min(2,devicePixelRatio||1);HUBFX.W=r.width;HUBFX.H=r.height;cv.width=r.width*HUBFX.dpr;cv.height=r.height*HUBFX.dpr;HUBFX.net=buildNet(HUBFX.W,HUBFX.H)};
   size();if(HUBFX.ro)HUBFX.ro.disconnect();HUBFX.ro=new ResizeObserver(size);HUBFX.ro.observe(wrap);
   requestAnimationFrame(()=>wrap.classList.add('on'));
-  document.querySelectorAll('.fxsel button').forEach(b=>b.onclick=()=>{store.set('hubfx',b.dataset.fx);document.querySelectorAll('.fxsel button').forEach(x=>x.classList.toggle('on',x===b));HUBFX.mode=b.dataset.fx;HUBFX.t0=performance.now();HUBFX.parts=[];HUBFX.pulses=[];toast('배경 '+b.dataset.fx+' · '+b.title)});
+  document.querySelectorAll('.fxsel button[data-rb]').forEach(b=>b.onclick=()=>{store.set('ribBlur',b.dataset.rb);document.querySelectorAll('.fxsel button').forEach(x=>x.classList.toggle('on',x===b));toast('리본 흐림 '+b.dataset.rb+' · '+b.title)});
+  document.querySelectorAll('.fxsel button[data-fx]').forEach(b=>b.onclick=()=>{store.set('hubfx',b.dataset.fx);document.querySelectorAll('.fxsel button').forEach(x=>x.classList.toggle('on',x===b));HUBFX.mode=b.dataset.fx;HUBFX.t0=performance.now();HUBFX.parts=[];HUBFX.pulses=[];toast('배경 '+b.dataset.fx+' · '+b.title)});
   const ctx=cv.getContext('2d');
   const frame=now=>{
     if(!document.body.contains(cv)){HUBFX.ro&&HUBFX.ro.disconnect();return}
@@ -1715,15 +1716,16 @@ const isDark=()=>document.body.classList.contains('dark');
 function clearHero(ctx){const W=HUBFX.W;const K=HUBFX.mode==='A'?.32:1;if(HUBFX.mode==='B'){ctx.save();ctx.globalCompositeOperation='destination-out';const cw=Math.min(1136,W-64),x0=(W-cw)/2;const g2=ctx.createLinearGradient(x0-120,0,x0+cw+120,0);g2.addColorStop(0,'rgba(0,0,0,0)');g2.addColorStop(.14,'rgba(0,0,0,.38)');g2.addColorStop(.86,'rgba(0,0,0,.38)');g2.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g2;ctx.fillRect(0,280,W,HUBFX.H);ctx.restore()}ctx.save();ctx.globalCompositeOperation='destination-out';ctx.translate(W/2,120);ctx.scale(1,.42);
   const g=ctx.createRadialGradient(0,0,0,0,0,Math.min(560,W*.42));g.addColorStop(0,'rgba(0,0,0,'+.85*K+')');g.addColorStop(.55,'rgba(0,0,0,'+.45*K+')');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Math.min(560,W*.42),0,7);ctx.fill();ctx.restore()}
 // --- A: ribbons
-function drawRibbon(ctx,t){const W=HUBFX.W,dk=isDark();
+const RIB_BLUR={A:2,B:5,C:10};const CTX_FILTER=(()=>{try{const c=document.createElement('canvas').getContext('2d');c.filter='blur(2px)';return c.filter==='blur(2px)'}catch(e){return false}})();
+function drawRibbon(ctx,t){const W=HUBFX.W,dk=isDark();const bl=RIB_BLUR[store.get('ribBlur','B')]||5;const cv=ctx.canvas;if(CTX_FILTER){cv.style.filter=''}else{cv.style.filter='blur('+(bl*.6)+'px)'}
   // 블루 → 틸 → 제이드 (보라 배제). 히어로(제목 y≈64, 검색 y≈145) 주변에 배치
   const BL=dk?'120,160,255':'67,120,240',TE=dk?'70,200,215':'28,160,190',JA=dk?'80,215,180':'30,170,140';
   const R=[{y:58,a:30,k:1.5,sp:.00020,ph:0,th:58,c:[BL,TE],al:dk?.20:.16},{y:112,a:42,k:1.05,sp:-.00015,ph:2,th:86,c:[TE,JA],al:dk?.16:.13},{y:168,a:26,k:2.0,sp:.00025,ph:4,th:40,c:[JA,BL],al:dk?.14:.10}];
   for(const r of R){const f=(x,o)=>r.y+Math.sin(x/W*Math.PI*r.k+t*r.sp+r.ph+o)*r.a+Math.sin(x/W*Math.PI*r.k*2.3+t*r.sp*1.7)*r.a*.25;
     const g=ctx.createLinearGradient(0,0,W,0);g.addColorStop(0,'rgba('+r.c[0]+',0)');g.addColorStop(.25,'rgba('+r.c[0]+','+r.al+')');g.addColorStop(.55,'rgba('+r.c[1]+','+r.al*1.05+')');g.addColorStop(.85,'rgba('+r.c[1]+','+r.al*.7+')');g.addColorStop(1,'rgba('+r.c[1]+',0)');
-    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));for(let x=W+20;x>=-20;x-=12)ctx.lineTo(x,f(x,.55)+r.th);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));for(let x=W+20;x>=-20;x-=12)ctx.lineTo(x,f(x,.55)+r.th);ctx.closePath();ctx.fillStyle=g;if(CTX_FILTER)ctx.filter='blur('+bl+'px)';ctx.fill();if(CTX_FILTER)ctx.filter='blur('+(bl*.35)+'px)';
     const e=ctx.createLinearGradient(0,0,W,0);e.addColorStop(0,'rgba('+r.c[0]+',0)');e.addColorStop(.3,'rgba('+r.c[0]+','+Math.min(.5,r.al*2.4)+')');e.addColorStop(.7,'rgba('+r.c[1]+','+Math.min(.5,r.al*2.2)+')');e.addColorStop(1,'rgba('+r.c[1]+',0)');
-    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));ctx.strokeStyle=e;ctx.lineWidth=1.1;ctx.stroke()}}
+    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));ctx.strokeStyle=e;ctx.lineWidth=1.1;ctx.stroke();ctx.filter='none'}}
 // --- B: signal flow network
 function rnd(seed){let x=seed;return()=>((x=Math.imul(x^x>>>15,2246822507)^Math.imul(x^x>>>13,3266489909),(x^=x>>>16)>>>0)/4294967296)}
 function buildNet(W,H){const r=rnd(7),lines=[],nodes=[],links=[];const ys=[.2,.33,.47,.6,.73,.86];
@@ -1775,7 +1777,7 @@ function route(){
   renderNav();renderRail();renderLnav();bindView();placePins();
 }
 function bindView(){
-  if($('#hubfx')){hubfxInit();window.__hubIntroDone=true;document.body.classList.remove('hs-A','hs-B','hs-C');document.body.classList.add('hs-'+store.get('hsVar','B'));document.querySelectorAll('.hsel button').forEach(b=>b.onclick=e=>{e.stopPropagation();store.set('hsVar',b.dataset.hs);document.body.classList.remove('hs-A','hs-B','hs-C');document.body.classList.add('hs-'+b.dataset.hs);document.querySelectorAll('.hsel button').forEach(x=>x.classList.toggle('on',x===b));toast('검색창 '+b.dataset.hs+' · '+b.title)})}
+  if($('#hubfx')){hubfxInit();window.__hubIntroDone=true;document.body.classList.remove('hs-B','hs-C');document.body.classList.add('hs-A')}
   const sw=$('#hubSwitch');
   if(sw)sw.onclick=()=>{const on=!sw.classList.contains('on');setStartPref(on?'hub':'last',true);if(!on)toast('다음 로그인부터 마지막으로 본 화면이 열려요. 사용자 메뉴 › 시작 화면에서 다시 켤 수 있어요.','되돌리기',()=>setStartPref('hub',true));else toast('다음 로그인부터 Start Hub가 열려요.')};
   document.querySelectorAll('.htab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.htab').forEach(x=>x.classList.toggle('on',x===t))});
