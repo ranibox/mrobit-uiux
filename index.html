@@ -590,12 +590,29 @@ body.dark .hub h1{background-image:linear-gradient(100deg,var(--tc) 0,var(--tc) 
 .hsearch{position:relative;margin:28px auto 0;max-width:880px;height:56px;border-radius:999px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 10px 0 22px;font-size:16px;color:var(--text-3);transition:border-color var(--motion-base)}
 .hsearch::before{content:"";position:absolute;left:8%;right:8%;bottom:-8px;height:22px;border-radius:999px;background:linear-gradient(90deg,rgba(67,120,240,.66),rgba(50,140,230,.6) 50%,rgba(28,165,190,.5) 78%,rgba(30,170,140,.32));filter:blur(14px);opacity:.55;z-index:-1;pointer-events:none;transition:opacity var(--motion-base) var(--ease)}
 .hsearch:hover{border-color:#b9c7e6}.hsearch:hover::before{opacity:.7}
-/* S00-H-09 gradient border */
-.hsearch{--hs-in:#fff;border:2px solid transparent;background:linear-gradient(var(--hs-in),var(--hs-in)) padding-box,linear-gradient(90deg,#4378f0 0%,#2a9fc0 10%,#1eaa8c 20%,#7d8fd8 31%,#c46ebd 40%,#7c7fe0 50%,#4378f0 60%,#2a9fc0 70%,#1eaa8c 80%,#7d8fd8 91%,#c46ebd 100%) border-box;background-size:100% 100%,160% 100%;animation:hsFlow 14s ease-in-out infinite alternate}
-.hsearch:hover{border-color:transparent}
-body.dark .hsearch{--hs-in:var(--surface);background:linear-gradient(var(--hs-in),var(--hs-in)) padding-box,linear-gradient(90deg,#6f96ff 0%,#4fbbd8 10%,#45c9a8 20%,#9aa6ee 31%,#d98ad2 40%,#9a9cf2 50%,#6f96ff 60%,#4fbbd8 70%,#45c9a8 80%,#9aa6ee 91%,#d98ad2 100%) border-box;background-size:100% 100%,160% 100%}
-@keyframes hsFlow{from{background-position:0 0,0% 0}to{background-position:0 0,100% 0}}
-@media (prefers-reduced-motion:reduce){.hsearch{animation:none}}
+/* S00-H-09 search: 1px blue + outer glow (bottom-weighted) — 시안 A/B/C */
+.hsearch{border:1px solid #4370ff;transition:box-shadow .35s var(--ease),border-color .35s var(--ease),transform .35s var(--ease)}
+.hsearch::before{display:none}
+/* A 소프트 리프트: 얇은 링 + 아래로 떨어지는 부드러운 블루 그림자 */
+.hs-A .hsearch{box-shadow:0 0 0 4px rgba(67,112,255,.07),0 2px 6px rgba(67,112,255,.12),0 14px 30px -10px rgba(67,112,255,.42)}
+.hs-A .hsearch:hover{box-shadow:0 0 0 5px rgba(67,112,255,.1),0 3px 8px rgba(67,112,255,.14),0 18px 36px -10px rgba(67,112,255,.5)}
+/* B 아우라: 사방으로 번지는 빛 + 아래쪽에 더 짙게 */
+.hs-B .hsearch{box-shadow:0 0 0 6px rgba(67,112,255,.06),0 0 30px rgba(67,112,255,.24),0 22px 48px -10px rgba(67,112,255,.5),0 40px 70px -28px rgba(28,160,190,.4)}
+.hs-B .hsearch:hover{box-shadow:0 0 0 7px rgba(67,112,255,.08),0 0 38px rgba(67,112,255,.3),0 26px 54px -10px rgba(67,112,255,.56),0 46px 80px -28px rgba(28,160,190,.45)}
+/* C 플로팅: 위쪽 하이라이트 + 다층 그림자로 떠 있는 판 */
+.hs-C .hsearch{background:linear-gradient(180deg,#fff 0,#fbfcff 60%,#f3f6ff 100%);box-shadow:inset 0 1px 0 #fff,inset 0 -2px 6px rgba(67,112,255,.06),0 1px 2px rgba(15,23,42,.1),0 10px 18px -6px rgba(30,60,160,.28),0 32px 52px -16px rgba(43,80,200,.55)}
+.hs-C .hsearch{transform:translateY(-2px)}.hs-C .hsearch:hover{transform:translateY(-3px);box-shadow:inset 0 1px 0 #fff,inset 0 -2px 6px rgba(67,112,255,.08),0 2px 4px rgba(15,23,42,.08),0 12px 20px -6px rgba(30,60,160,.26),0 32px 52px -18px rgba(67,112,255,.52)}
+body.dark .hsearch{border-color:#6f96ff}
+body.dark.hs-A .hsearch{box-shadow:0 0 0 4px rgba(111,150,255,.1),0 14px 30px -10px rgba(111,150,255,.45)}
+body.dark.hs-B .hsearch{box-shadow:0 0 0 6px rgba(111,150,255,.08),0 0 32px rgba(111,150,255,.32),0 16px 36px -8px rgba(111,150,255,.4),0 30px 60px -24px rgba(69,201,168,.3)}
+body.dark.hs-C .hsearch{background:linear-gradient(180deg,#1f2b40,#18222f);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 16px -6px rgba(0,0,0,.5),0 26px 44px -18px rgba(111,150,255,.45)}
+.hsel{position:absolute;right:0;top:calc(100% + 10px);display:flex;align-items:center;gap:6px;font-size:var(--fs-caption);color:var(--text-3)}
+.hsel .seg{display:flex;padding:2px;border-radius:8px;background:rgba(255,255,255,.7);border:1px solid var(--line)}
+.hsel .seg button{min-width:26px;height:22px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:700;color:var(--text-3)}
+.hsel .seg button.on,body.dark .hsel .seg button.on{background:var(--accent);color:#fff}
+.hsel .tmp{font-size:10px;font-weight:700;color:#e07c00;border:1px solid rgba(255,153,0,.45);border-radius:4px;padding:0 4px}
+body.dark .hsel .seg{background:rgba(15,22,32,.6)}
+.hswrap{position:relative;max-width:880px;margin:0 auto}
 .hsearch .mic{border-radius:999px}
 .hsearch kbd{margin-left:auto;font:600 var(--fs-caption) var(--font);background:#f1f5fb;border:1px solid var(--line-soft);border-radius:6px;padding:3px 8px;color:var(--text-2)}
 .mic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#f1f5fb;color:var(--text-2)}
@@ -1067,7 +1084,7 @@ V.start=()=>{
   return `<div class="hubfx" id="hubfx" data-pin="S00-H-07"><canvas id="hubfxC"></canvas></div><div class="hub" data-pin="S00-H-01">
   <div class="hub-top"><h1 data-pin="S00-H-08" class="${window.__hubIntroDone?'':'intro'}">Start Hub</h1>
   <div class="switch ${startPref()==='hub'?'on':''}" id="hubSwitch" data-pin="S00-H-03">로그인 시 Start Hub 표시<span class="sw"></span></div></div>
-  <div class="hsearch" id="hubSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>태그 · 설비 · 도면 · 문서 검색<kbd>Ctrl K</kbd><span class="mic" title="음성 검색(예정)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div>
+  <div class="hswrap"><div class="hsel" title="시안 비교용 임시 스위치"><span class="tmp">시안</span>검색창<span class="seg">${['A','B','C'].map(k=>'<button data-hs="'+k+'" class="'+(k===store.get('hsVar','B')?'on':'')+'" title="'+{A:'소프트 리프트',B:'아우라',C:'플로팅'}[k]+'">'+k+'</button>').join('')}</span></div><div class="hsearch" id="hubSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>태그 · 설비 · 도면 · 문서 검색<kbd>Ctrl K</kbd><span class="mic" title="음성 검색(예정)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div></div>
   <div class="chips"><small>최근</small><button class="chip">0-36610-001-HB2D-100</button><button class="chip">CCWP B</button><button class="chip">9-36610-LM-105-901</button></div>
   <section class="hsec" data-pin="S00-H-05"><div class="hsec-hd"><h2>연결 현황</h2><span class="meta"><span class="live-dot"></span>BITHUB 동기화 · 14:30</span></div>
   <div class="kpis">
@@ -1758,7 +1775,7 @@ function route(){
   renderNav();renderRail();renderLnav();bindView();placePins();
 }
 function bindView(){
-  if($('#hubfx')){hubfxInit();window.__hubIntroDone=true}
+  if($('#hubfx')){hubfxInit();window.__hubIntroDone=true;document.body.classList.remove('hs-A','hs-B','hs-C');document.body.classList.add('hs-'+store.get('hsVar','B'));document.querySelectorAll('.hsel button').forEach(b=>b.onclick=e=>{e.stopPropagation();store.set('hsVar',b.dataset.hs);document.body.classList.remove('hs-A','hs-B','hs-C');document.body.classList.add('hs-'+b.dataset.hs);document.querySelectorAll('.hsel button').forEach(x=>x.classList.toggle('on',x===b));toast('검색창 '+b.dataset.hs+' · '+b.title)})}
   const sw=$('#hubSwitch');
   if(sw)sw.onclick=()=>{const on=!sw.classList.contains('on');setStartPref(on?'hub':'last',true);if(!on)toast('다음 로그인부터 마지막으로 본 화면이 열려요. 사용자 메뉴 › 시작 화면에서 다시 켤 수 있어요.','되돌리기',()=>setStartPref('hub',true));else toast('다음 로그인부터 Start Hub가 열려요.')};
   document.querySelectorAll('.htab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.htab').forEach(x=>x.classList.toggle('on',x===t))});
