@@ -630,9 +630,10 @@ body.dark .hsel .seg{background:rgba(15,22,32,.6)}
 .hsec-hd .htab:hover{color:var(--text)}
 .hsec-hd .htab.on{color:var(--text)}
 .hsec-hd .htab.on::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:2px;background:var(--text)}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(255,255,255,.5);border-radius:12px;padding:14px 0 12px}
+body.dark .kpis{background:rgba(255,255,255,.05)}
 .kpi{padding:2px 20px 4px;background:none;border:0;border-radius:0;border-left:1px solid var(--line)}
-.kpi:first-child{border-left:0;padding-left:4px}
+.kpi:first-child{border-left:0}
 .kpi .kh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .kpi small{font-size:var(--fs-label);color:var(--text-2);font-weight:600}
 .kpi b{display:block;font-size:30px;font-weight:700;line-height:36px;margin-top:4px;font-variant-numeric:tabular-nums}
@@ -1082,7 +1083,7 @@ function thumbDwg(vb,mark){let s=dwgSVG().replace(' id="dwgSvg"','').replace('vi
   return s}
 V.start=()=>{
   return `<div class="hubfx" id="hubfx" data-pin="S00-H-07"><canvas id="hubfxC"></canvas></div><div class="hub" data-pin="S00-H-01">
-  <div class="hub-top"><div class="fxsel" title="시안 비교용 임시 스위치"><span class="tmp">시안</span>리본 흐림<span class="seg">${['A','B','C'].map(k=>'<button data-rb="'+k+'" class="'+(k===store.get('ribBlur','B')?'on':'')+'" title="'+{A:'살짝 2px',B:'중간 5px',C:'부드럽게 10px'}[k]+'">'+k+'</button>').join('')}</span></div><h1 data-pin="S00-H-08" class="${window.__hubIntroDone?'':'intro'}">Start Hub</h1>
+  <div class="hub-top"><h1 data-pin="S00-H-08" class="${window.__hubIntroDone?'':'intro'}">Start Hub</h1>
   <div class="switch ${startPref()==='hub'?'on':''}" id="hubSwitch" data-pin="S00-H-03">로그인 시 Start Hub 표시<span class="sw"></span></div></div>
   <div class="hswrap"><div class="hsearch" id="hubSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>태그 · 설비 · 도면 · 문서 검색<kbd>Ctrl K</kbd><span class="mic" title="음성 검색(예정)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div></div>
   <div class="chips"><small>최근</small><button class="chip">0-36610-001-HB2D-100</button><button class="chip">CCWP B</button><button class="chip">9-36610-LM-105-901</button></div>
@@ -1717,7 +1718,7 @@ function clearHero(ctx){const W=HUBFX.W;const K=HUBFX.mode==='A'?.32:1;if(HUBFX.
   const g=ctx.createRadialGradient(0,0,0,0,0,Math.min(560,W*.42));g.addColorStop(0,'rgba(0,0,0,'+.85*K+')');g.addColorStop(.55,'rgba(0,0,0,'+.45*K+')');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Math.min(560,W*.42),0,7);ctx.fill();ctx.restore()}
 // --- A: ribbons
 const RIB_BLUR={A:2,B:5,C:10};const CTX_FILTER=(()=>{try{const c=document.createElement('canvas').getContext('2d');c.filter='blur(2px)';return c.filter==='blur(2px)'}catch(e){return false}})();
-function drawRibbon(ctx,t){const W=HUBFX.W,dk=isDark();const bl=RIB_BLUR[store.get('ribBlur','B')]||5;const cv=ctx.canvas;if(CTX_FILTER){cv.style.filter=''}else{cv.style.filter='blur('+(bl*.6)+'px)'}
+function drawRibbon(ctx,t){const W=HUBFX.W,dk=isDark();const bl=RIB_BLUR.C;const cv=ctx.canvas;if(CTX_FILTER){cv.style.filter=''}else{cv.style.filter='blur('+(bl*.6)+'px)'}
   // 블루 → 틸 → 제이드 (보라 배제). 히어로(제목 y≈64, 검색 y≈145) 주변에 배치
   const BL=dk?'120,160,255':'67,120,240',TE=dk?'70,200,215':'28,160,190',JA=dk?'80,215,180':'30,170,140';
   const R=[{y:58,a:30,k:1.5,sp:.00020,ph:0,th:58,c:[BL,TE],al:dk?.20:.16},{y:112,a:42,k:1.05,sp:-.00015,ph:2,th:86,c:[TE,JA],al:dk?.16:.13},{y:168,a:26,k:2.0,sp:.00025,ph:4,th:40,c:[JA,BL],al:dk?.14:.10}];
