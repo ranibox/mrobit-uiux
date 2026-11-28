@@ -378,7 +378,7 @@ body.dark .hub-row .card{box-shadow:0 1px 2px rgba(0,0,0,.3),0 4px 12px rgba(0,0
 body.dark .hub-row .path:hover{border-color:#3d5378}
 body.dark .hsec-hd .htab.on{color:#fff}body.dark .hsec-hd .htab.on::after{background:#fff}
 body.dark .hsearch .tagN,body.dark .tagN{background:#1f2d52;color:#9db8ff}
-body.dark #main.m-start{background:linear-gradient(180deg,#16275c 0,#122042 220px,#101a2b 460px,#0f1620 720px) #0f1620;background-attachment:local}
+body.dark #main.m-start{background:linear-gradient(180deg,#12294f 0,#10223a 220px,#101a2b 460px,#0f1620 720px) #0f1620;background-attachment:local}
 body.dark .hub-row .pt{color:#8fb0ff}
 body.dark .note .id,body.dark .cfg-badge{background:#2a2112;color:#ffb347;border-color:#6b4a1a}
 
@@ -543,7 +543,7 @@ body.dark .bbx-hd .acts button:hover,body.dark .fb button:hover{background:var(-
 
 /* hub living background (S00-H-07) */
 .view{position:relative}
-.hubfx{position:absolute;left:0;right:0;top:0;height:620px;pointer-events:none;z-index:0;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 42%,rgba(0,0,0,.45) 62%,transparent 88%);mask-image:linear-gradient(180deg,#000 0,#000 42%,rgba(0,0,0,.45) 62%,transparent 88%);opacity:0;transition:opacity 1.2s var(--ease)}
+.hubfx{position:absolute;left:0;right:0;top:0;height:620px;pointer-events:none;z-index:0;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 34%,rgba(0,0,0,.35) 46%,transparent 60%);mask-image:linear-gradient(180deg,#000 0,#000 34%,rgba(0,0,0,.35) 46%,transparent 60%);opacity:0;transition:opacity 1.2s var(--ease)}
 .hubfx.on{opacity:1}
 .hubfx canvas{width:100%;height:100%;display:block}
 .hub{position:relative;z-index:1}
@@ -557,7 +557,7 @@ body.dark .fxsel .seg{background:rgba(15,22,32,.55)}
 @keyframes liveP{0%{box-shadow:0 0 0 0 rgba(68,204,22,.6)}100%{box-shadow:0 0 0 10px rgba(68,204,22,0)}}
 
 /* start hub */
-#main.m-start{background:linear-gradient(180deg,#dde3f3 0,#e9edf7 220px,#f6f8fc 460px,#ffffff 720px) #fff;background-attachment:local}
+#main.m-start{background:linear-gradient(180deg,#dfe8f0 0,#ebf1f5 220px,#f6f9fa 460px,#ffffff 720px) #fff;background-attachment:local}
 .hub{max-width:1200px;margin:0 auto;padding:28px 32px 56px}
 .hsec-ws{margin-top:48px}
 .hub{isolation:isolate}
@@ -573,7 +573,7 @@ body.dark .fxsel .seg{background:rgba(15,22,32,.55)}
 .switch.on .sw{background:var(--accent)}
 .switch.on .sw::after{transform:translateX(16px)}
 .hsearch{position:relative;margin:28px auto 0;max-width:880px;height:56px;border-radius:999px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 10px 0 22px;font-size:16px;color:var(--text-3);transition:border-color var(--motion-base)}
-.hsearch::before{content:"";position:absolute;left:8%;right:8%;bottom:-8px;height:22px;border-radius:999px;background:linear-gradient(90deg,rgba(67,112,255,.7),rgba(67,112,255,.62) 50%,rgba(110,100,255,.5) 78%,rgba(160,110,255,.32));filter:blur(14px);opacity:.55;z-index:-1;pointer-events:none;transition:opacity var(--motion-base) var(--ease)}
+.hsearch::before{content:"";position:absolute;left:8%;right:8%;bottom:-8px;height:22px;border-radius:999px;background:linear-gradient(90deg,rgba(67,120,240,.66),rgba(50,140,230,.6) 50%,rgba(28,165,190,.5) 78%,rgba(30,170,140,.32));filter:blur(14px);opacity:.55;z-index:-1;pointer-events:none;transition:opacity var(--motion-base) var(--ease)}
 .hsearch:hover{border-color:#b9c7e6}.hsearch:hover::before{opacity:.7}
 .hsearch .mic{border-radius:999px}
 .hsearch kbd{margin-left:auto;font:600 var(--fs-caption) var(--font);background:#f1f5fb;border:1px solid var(--line-soft);border-radius:6px;padding:3px 8px;color:var(--text-2)}
@@ -900,7 +900,7 @@ const NOTES={
  'S00-H-03':{t:'Start Hub 표시 설정 (켜기/끄기)',ch:'Start Hub 우측 상단 스위치: [로그인 시 Start Hub 표시]. 끄면 다음 로그인부터 마지막으로 본 화면이 열림.',mo:'끌 때 토스트 4초 — 다시 켜는 방법 안내 + [되돌리기].',em:'L1',dev:'사용자 메뉴의 시작 화면 설정과 같은 값을 공유(계정 단위 저장). 기본값 ON.'},
  'S90-A6-01':{t:'사용자 메뉴 › 시작 화면 설정',ch:'Start Hub / 마지막으로 본 화면 / Live Brief 중 선택. 꺼 둔 Start Hub를 다시 켜는 공식 경로.',mo:'선택 즉시 저장, 토스트로 확인.',em:'L1',dev:'관제·대시보드 PC는 Live Brief를 시작 화면으로 지정.'},
  'S00-H-05':{t:'정보 영역 구분 — 현황(읽기) vs 바로 시작(이동)',ch:'세 영역을 같은 섹션 머리(12px 볼드 타이틀 + 1px 하단 라인)로 구분: [연결 현황] · [바로 시작] · [이어서 작업]. 연결 현황은 카드 배경 없이 세로 구분선만 둔 데이터 스트립(클릭 불가로 읽힘). 바로 시작은 흰 카드 + 옅은 그림자 + hover 상승·화살표 강조(클릭 가능으로 읽힘). 시작 경로 카드의 1D/2D/3D 아이콘 삭제.',mo:'바로 시작 카드 hover: 2px 상승, 화살표 --accent + 2px 이동(120ms).',em:'L1',dev:'우측 메타 [BITHUB 동기화 · 시각]은 마지막 집계 시각. 데이터 출처 R&D 확인.'},
- 'S00-H-07':{t:'살아 움직이는 배경 — 시안 비교 A·B·C',ch:'첫 화면 히어로(제목·검색) 뒤에만 움직이는 배경을 깔고 아래 카드 영역에서는 흰색으로 사라진다. 제목·검색 뒤는 자동으로 비워 가독성 유지. A 라이트 리본: 옅은 블루 빛의 띠가 25초 이상 주기로 흐름(감성). B 시그널 플로우(추천): 옅은 배관·연결선이 2초간 그려지며 연결된 뒤, 빛 점이 선을 따라 흐르고 노드가 가끔 맥박. 약 14초마다 BITHUB 동기화 펄스(모든 선에 빛 + 동기화 점 반짝). C 라이브 오라: 블루 색 덩어리 3개가 느리게 섞이고, Live Brief에 주의가 있으면 하나에 주황빛이 번짐. 좌상단 [시안 A·B·C]는 비교용 임시 스위치.',mo:'인트로 1.8초 ease-out, 이후 상시 저속. 노드 맥박 1.6초, 2.6초 간격.',em:'L2',dev:'Canvas 1장(최대 2배 해상도). 탭이 안 보이면 그리지 않음, 화면 이동 시 즉시 정지. 동작 줄이기 설정이면 정지 이미지 1장. 투명도 8~16%로 텍스트 대비 4.5:1 유지. 다크 모드 별도 색.'},
+ 'S00-H-07':{t:'살아 움직이는 배경 — 시안 비교 A·B·C',ch:'[확정: A 라이트 리본] 블루→틸→제이드 리본 3겹이 제목·검색창 뒤를 지나 흐른다(보라 배제). 제목 뒤는 살짝만 비워 리본이 글자 뒤로 지나가는 느낌을 살림. (참고: 비교했던 3안) 첫 화면 히어로(제목·검색) 뒤에만 움직이는 배경을 깔고 아래 카드 영역에서는 흰색으로 사라진다. 제목·검색 뒤는 자동으로 비워 가독성 유지. A 라이트 리본: 옅은 블루 빛의 띠가 25초 이상 주기로 흐름(감성). B 시그널 플로우(추천): 옅은 배관·연결선이 2초간 그려지며 연결된 뒤, 빛 점이 선을 따라 흐르고 노드가 가끔 맥박. 약 14초마다 BITHUB 동기화 펄스(모든 선에 빛 + 동기화 점 반짝). C 라이브 오라: 블루 색 덩어리 3개가 느리게 섞이고, Live Brief에 주의가 있으면 하나에 주황빛이 번짐. 좌상단 [시안 A·B·C]는 비교용 임시 스위치.',mo:'인트로 1.8초 ease-out, 이후 상시 저속. 노드 맥박 1.6초, 2.6초 간격.',em:'L2',dev:'Canvas 1장(최대 2배 해상도). 탭이 안 보이면 그리지 않음, 화면 이동 시 즉시 정지. 동작 줄이기 설정이면 정지 이미지 1장. 투명도 8~16%로 텍스트 대비 4.5:1 유지. 다크 모드 별도 색.'},
  'S00-H-06':{t:'이어서 작업 (최근·즐겨찾기·내 폴더)',ch:'위 영역과 48px 간격. 섹션 타이틀 [이어서 작업] + 오른쪽 텍스트 탭(12px, 선택 시 진한 글자 + 2px 밑줄). 칩형 탭 대신 얇은 라인으로 구분.',mo:'탭 전환 시 카드 목록만 교체.',em:'L1',dev:'최근 = 계정별 최근 열람 8개, 즐겨찾기·내 폴더는 사용자 저장 항목.'},
  'S00-H-04':{t:'Live Brief 요약 카드 (구분 원칙)',ch:'시작 경로 3개(태그·도면·3D)와 한 줄에 배치되는 가로형 카드(2:1:1:1). 내용은 [Live Brief · 시각] 라벨 + "오늘 결정할 일 3건"(숫자 3만 --accent) + [Live Brief 열기]. 카드 좌측 강조 라인 사용 안 함.',mo:'[Live Brief 열기] → S01.',em:'L1',dev:'KPI·흐름도·결정 카드 상세는 넣지 않음.'},
  'S01-D-01':{t:'Live Brief 표시 모드 (대시보드용)',ch:'대형 화면에 띄울 때만 본문 1.25배 확대. 기본은 데스크톱 스케일.',mo:'토글 즉시 적용.',em:'L0',dev:'루트 font-size 전환(rem 기반) 권장. 시안은 zoom으로 시뮬레이션.'},
@@ -1038,9 +1038,8 @@ $('#lnavClose').onclick=()=>{state.lnav=false;store.set('lnavOpen','0');renderRa
 function crumb(sec,group,label){return '<div class="crumb" data-pin="S90-B-02"><a href="#/'+sec.id+'/'+sec.groups[0].items[0][0]+'">'+sec.label+'</a>'+(sec.groups.length>1?'<span>›</span><span>'+group+'</span>':'')+'<span>›</span><span class="cur">'+label+'</span></div>'}
 const V={};
 V.start=()=>{
-  const fx=store.get('hubfx','B');
   return `<div class="hubfx" id="hubfx" data-pin="S00-H-07"><canvas id="hubfxC"></canvas></div><div class="hub" data-pin="S00-H-01">
-  <div class="hub-top"><div class="fxsel" title="시안 비교용 임시 스위치"><span class="tmp">시안</span>배경<span class="seg">${['A','B','C'].map(k=>'<button data-fx="'+k+'" class="'+(k===fx?'on':'')+'" title="'+{A:'라이트 리본',B:'시그널 플로우',C:'라이브 오라'}[k]+'">'+k+'</button>').join('')}</span></div><h1 data-pin="S90-T-01">Start Hub</h1>
+  <div class="hub-top"><h1 data-pin="S90-T-01">Start Hub</h1>
   <div class="switch ${startPref()==='hub'?'on':''}" id="hubSwitch" data-pin="S00-H-03">로그인 시 Start Hub 표시<span class="sw"></span></div></div>
   <div class="hsearch" id="hubSearch"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>태그 · 설비 · 도면 · 문서 검색<kbd>Ctrl K</kbd><span class="mic" title="음성 검색(예정)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div>
   <div class="chips"><small>최근</small><button class="chip">0-36610-001-HB2D-100</button><button class="chip">CCWP B</button><button class="chip">9-36610-LM-105-901</button></div>
@@ -1651,10 +1650,10 @@ function bindOrb(){const o=$('#aorb');if(!o)return;const pn=o.closest('.pane');i
 
 
 /* ============ Start Hub living background (S00-H-07) ============ */
-const HUBFX={raf:0,mode:'B',t0:0,net:null,parts:[],pulses:[],W:0,H:0,dpr:1,lastSync:0,lastNode:0,warn:true};
+const HUBFX={raf:0,mode:'A',t0:0,net:null,parts:[],pulses:[],W:0,H:0,dpr:1,lastSync:0,lastNode:0,warn:true};
 function hubfxInit(){
   const wrap=$('#hubfx'),cv=$('#hubfxC');if(!wrap||!cv)return;cancelAnimationFrame(HUBFX.raf);
-  HUBFX.mode=store.get('hubfx','B');HUBFX.t0=performance.now();HUBFX.lastSync=HUBFX.t0;HUBFX.lastNode=HUBFX.t0;HUBFX.parts=[];HUBFX.pulses=[];
+  HUBFX.mode='A';HUBFX.t0=performance.now();HUBFX.lastSync=HUBFX.t0;HUBFX.lastNode=HUBFX.t0;HUBFX.parts=[];HUBFX.pulses=[];
   HUBFX.warn=!!document.querySelector('.hub .live-dot.warn');
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const size=()=>{const r=wrap.getBoundingClientRect();HUBFX.dpr=Math.min(2,devicePixelRatio||1);HUBFX.W=r.width;HUBFX.H=r.height;cv.width=r.width*HUBFX.dpr;cv.height=r.height*HUBFX.dpr;HUBFX.net=buildNet(HUBFX.W,HUBFX.H)};
@@ -1670,15 +1669,18 @@ function hubfxInit(){
   HUBFX.raf=requestAnimationFrame(frame);
 }
 const isDark=()=>document.body.classList.contains('dark');
-function clearHero(ctx){const W=HUBFX.W;if(HUBFX.mode==='B'){ctx.save();ctx.globalCompositeOperation='destination-out';const cw=Math.min(1136,W-64),x0=(W-cw)/2;const g2=ctx.createLinearGradient(x0-120,0,x0+cw+120,0);g2.addColorStop(0,'rgba(0,0,0,0)');g2.addColorStop(.14,'rgba(0,0,0,.38)');g2.addColorStop(.86,'rgba(0,0,0,.38)');g2.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g2;ctx.fillRect(0,280,W,HUBFX.H);ctx.restore()}ctx.save();ctx.globalCompositeOperation='destination-out';ctx.translate(W/2,120);ctx.scale(1,.42);
-  const g=ctx.createRadialGradient(0,0,0,0,0,Math.min(560,W*.42));g.addColorStop(0,'rgba(0,0,0,.85)');g.addColorStop(.55,'rgba(0,0,0,.45)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Math.min(560,W*.42),0,7);ctx.fill();ctx.restore()}
+function clearHero(ctx){const W=HUBFX.W;const K=HUBFX.mode==='A'?.32:1;if(HUBFX.mode==='B'){ctx.save();ctx.globalCompositeOperation='destination-out';const cw=Math.min(1136,W-64),x0=(W-cw)/2;const g2=ctx.createLinearGradient(x0-120,0,x0+cw+120,0);g2.addColorStop(0,'rgba(0,0,0,0)');g2.addColorStop(.14,'rgba(0,0,0,.38)');g2.addColorStop(.86,'rgba(0,0,0,.38)');g2.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g2;ctx.fillRect(0,280,W,HUBFX.H);ctx.restore()}ctx.save();ctx.globalCompositeOperation='destination-out';ctx.translate(W/2,120);ctx.scale(1,.42);
+  const g=ctx.createRadialGradient(0,0,0,0,0,Math.min(560,W*.42));g.addColorStop(0,'rgba(0,0,0,'+.85*K+')');g.addColorStop(.55,'rgba(0,0,0,'+.45*K+')');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Math.min(560,W*.42),0,7);ctx.fill();ctx.restore()}
 // --- A: ribbons
-function drawRibbon(ctx,t){const W=HUBFX.W,H=HUBFX.H,dk=isDark();
-  const R=[{y:.34,a:46,k:1.6,sp:.00021,ph:0,th:70,c:dk?'143,176,255':'67,112,255',al:dk?.18:.17},{y:.46,a:60,k:1.1,sp:-.00016,ph:2,th:110,c:dk?'124,150,255':'96,140,255',al:dk?.14:.13},{y:.58,a:38,k:2.1,sp:.00026,ph:4,th:50,c:dk?'180,200,255':'67,112,255',al:dk?.12:.08}];
-  for(const r of R){const yb=H*r.y;const f=(x,o)=>yb+Math.sin(x/W*Math.PI*r.k+t*r.sp+r.ph+o)*r.a+Math.sin(x/W*Math.PI*r.k*2.3+t*r.sp*1.7)*r.a*.25;
-    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));for(let x=W+20;x>=-20;x-=12)ctx.lineTo(x,f(x,.55)+r.th);ctx.closePath();
-    const g=ctx.createLinearGradient(0,0,W,0);g.addColorStop(0,'rgba('+r.c+',0)');g.addColorStop(.3,'rgba('+r.c+','+r.al+')');g.addColorStop(.7,'rgba('+r.c+','+r.al*.8+')');g.addColorStop(1,'rgba('+r.c+',0)');ctx.fillStyle=g;ctx.fill();
-    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));ctx.strokeStyle=g;ctx.lineWidth=1.2;ctx.globalAlpha=1.6;ctx.stroke();ctx.globalAlpha=1}}
+function drawRibbon(ctx,t){const W=HUBFX.W,dk=isDark();
+  // 블루 → 틸 → 제이드 (보라 배제). 히어로(제목 y≈64, 검색 y≈145) 주변에 배치
+  const BL=dk?'120,160,255':'67,120,240',TE=dk?'70,200,215':'28,160,190',JA=dk?'80,215,180':'30,170,140';
+  const R=[{y:58,a:30,k:1.5,sp:.00020,ph:0,th:58,c:[BL,TE],al:dk?.20:.16},{y:112,a:42,k:1.05,sp:-.00015,ph:2,th:86,c:[TE,JA],al:dk?.16:.13},{y:168,a:26,k:2.0,sp:.00025,ph:4,th:40,c:[JA,BL],al:dk?.14:.10}];
+  for(const r of R){const f=(x,o)=>r.y+Math.sin(x/W*Math.PI*r.k+t*r.sp+r.ph+o)*r.a+Math.sin(x/W*Math.PI*r.k*2.3+t*r.sp*1.7)*r.a*.25;
+    const g=ctx.createLinearGradient(0,0,W,0);g.addColorStop(0,'rgba('+r.c[0]+',0)');g.addColorStop(.25,'rgba('+r.c[0]+','+r.al+')');g.addColorStop(.55,'rgba('+r.c[1]+','+r.al*1.05+')');g.addColorStop(.85,'rgba('+r.c[1]+','+r.al*.7+')');g.addColorStop(1,'rgba('+r.c[1]+',0)');
+    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));for(let x=W+20;x>=-20;x-=12)ctx.lineTo(x,f(x,.55)+r.th);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+    const e=ctx.createLinearGradient(0,0,W,0);e.addColorStop(0,'rgba('+r.c[0]+',0)');e.addColorStop(.3,'rgba('+r.c[0]+','+Math.min(.5,r.al*2.4)+')');e.addColorStop(.7,'rgba('+r.c[1]+','+Math.min(.5,r.al*2.2)+')');e.addColorStop(1,'rgba('+r.c[1]+',0)');
+    ctx.beginPath();for(let x=-20;x<=W+20;x+=12)ctx.lineTo(x,f(x,0));ctx.strokeStyle=e;ctx.lineWidth=1.1;ctx.stroke()}}
 // --- B: signal flow network
 function rnd(seed){let x=seed;return()=>((x=Math.imul(x^x>>>15,2246822507)^Math.imul(x^x>>>13,3266489909),(x^=x>>>16)>>>0)/4294967296)}
 function buildNet(W,H){const r=rnd(7),lines=[],nodes=[],links=[];const ys=[.2,.33,.47,.6,.73,.86];
